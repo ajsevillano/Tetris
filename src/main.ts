@@ -126,7 +126,23 @@ document.addEventListener('keydown', (event) => {
     if (checkCollision()) {
       piece.position.y--;
       solidifyPiece();
+      removeRows();
     }
   }
 });
+
+function removeRows() {
+  const rowsToRemove: any = [];
+
+  board.forEach((row, y) => {
+    if (row.every((value) => value === 1)) {
+      rowsToRemove.push(y);
+    }
+  });
+  rowsToRemove.forEach((y: any) => {
+    board.splice(y, 1);
+    board.unshift(Array(BOARD_WIDTH).fill(0));
+  });
+}
+
 update();
