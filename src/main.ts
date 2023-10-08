@@ -54,8 +54,25 @@ const piece = {
     [1, 1],
   ],
 };
+
+let dropCounter = 0;
+let lastTime = 0;
+
 // Game loop
-function update() {
+function update(time = 0) {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+
+  dropCounter += deltaTime;
+  if (dropCounter > 1000) {
+    piece.position.y++;
+    if (checkCollision()) {
+      piece.position.y--;
+      solidifyPiece();
+      removeRows();
+    }
+    dropCounter = 0;
+  }
   draw();
   window.requestAnimationFrame(update);
 }
