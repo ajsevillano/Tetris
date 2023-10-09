@@ -1,4 +1,5 @@
 import './style.css';
+import PIECES from './pieces';
 
 const canvas: any = document.querySelector('canvas');
 const context = canvas?.getContext('2d');
@@ -49,10 +50,7 @@ const board = [
 // Pieces
 const piece = {
   position: { x: 5, y: 5 },
-  shape: [
-    [1, 1],
-    [1, 1],
-  ],
+  shape: PIECES[Math.floor(Math.random() * PIECES.length)],
 };
 
 let dropCounter = 0;
@@ -121,6 +119,10 @@ function solidifyPiece() {
     });
   });
 
+  // get ramdom piece
+  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
+
+  // reset position
   piece.position.x = 0;
   piece.position.y = 0;
 }
