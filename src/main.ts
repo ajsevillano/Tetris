@@ -70,13 +70,7 @@ function draw() {
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        // Define color for solidified pieces
-        context.fillStyle = value;
-        context.strokeStyle = '#000000';
-        context.lineWidth = 0.04;
-        // Draw border for solidified pieces
-        context.fillRect(x, y, 1, 1);
-        context.strokeRect(x, y, 1, 1);
+        createShapes(value, x, y);
       }
     });
   });
@@ -87,16 +81,20 @@ function draw() {
   piece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x) => {
       if (value) {
-        // Define color for solidified pieces
-        context.fillStyle = piece.color;
-        context.strokeStyle = '#000000';
-        context.lineWidth = 0.04;
-        // Draw border for new piece
-        context.fillRect(x + piece.position.x, y + piece.position.y, 1, 1);
-        context.strokeRect(x + piece.position.x, y + piece.position.y, 1, 1);
+        createShapes(piece.color, x + piece.position.x, y + piece.position.y);
       }
     });
   });
+}
+
+function createShapes(value: string, x: number, y: number) {
+  // Define color for pieces
+  context.fillStyle = value;
+  context.strokeStyle = '#000000';
+  context.lineWidth = 0.04;
+  // Draw border for  pieces
+  context.fillRect(x, y, 1, 1);
+  context.strokeRect(x, y, 1, 1);
 }
 
 function checkCollision() {
