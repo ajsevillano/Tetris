@@ -1,19 +1,17 @@
 import './style.css';
-import PIECES from './pieces';
+import TETROMINOES from './blocks';
+import { CANVAS_CONFIG, EVENT_MOVEMENTS } from './const';
 
+// Canvas
 const canvas: any = document.querySelector('canvas');
 const context = canvas?.getContext('2d');
+canvas.width = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_WIDTH;
+canvas.height = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_HEIGHT;
+context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
+
+// Score
 const $score: any = document.querySelector('span');
-const BLOCK_SIZE = 20;
-const BOARD_WIDTH = 14;
-const BOARD_HEIGHT = 30;
-
 let score = 0;
-
-canvas.width = BLOCK_SIZE * BOARD_WIDTH;
-canvas.height = BLOCK_SIZE * BOARD_HEIGHT;
-
-context.scale(BLOCK_SIZE, BLOCK_SIZE);
 
 const createBoard = (width: number, height: number) => {
   return Array(height)
@@ -22,13 +20,23 @@ const createBoard = (width: number, height: number) => {
 };
 
 // Board
-const board = createBoard(BOARD_WIDTH, BOARD_HEIGHT);
+const board = createBoard(
+  CANVAS_CONFIG.BOARD_WIDTH,
+  CANVAS_CONFIG.BOARD_HEIGHT,
+);
 
-// Pieces
-const piece = {
-  position: { x: 5, y: 0 },
-  shape: PIECES[Math.floor(Math.random() * PIECES.length)],
-};
+let piece = generateRandomPiece();
+
+function generateRandomPiece() {
+  const randomTetromino =
+    TETROMINOES[Math.floor(Math.random() * TETROMINOES.length)];
+
+  return {
+    position: { x: 5, y: 0 },
+    shape: randomTetromino.shape,
+    color: randomTetromino.color,
+  };
+}
 
 let dropCounter = 0;
 let lastTime = 0;
@@ -44,7 +52,8 @@ function update(time = 0) {
     if (checkCollision()) {
       piece.position.y--;
       solidifyPiece();
-      removeRows();
+      checkAndRemoveRows();
+      piece = generateRandomPiece();
     }
     dropCounter = 0;
   }
@@ -53,15 +62,21 @@ function update(time = 0) {
 }
 
 function draw() {
+  // Draw the board
   context.fillStyle = '#000';
   context.fillRect(0, 0, canvas.width, canvas.height);
 
   // Loop through board
   board.forEach((row, y) => {
     row.forEach((value, x) => {
-      if (value === 1) {
-        context.fillStyle = '#fff';
+      if (value !== 0) {
+        // Define color for solidified pieces
+        context.fillStyle = value;
+        context.strokeStyle = '#000000';
+        context.lineWidth = 0.04;
+        // Draw border for solidified pieces
         context.fillRect(x, y, 1, 1);
+        context.strokeRect(x, y, 1, 1);
       }
     });
   });
@@ -69,40 +84,62 @@ function draw() {
   $score.innerText = score;
 
   // Loop through piece
-  piece.shape.forEach((row, y) => {
+  piece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x) => {
       if (value) {
-        context.fillStyle = 'red';
+        // Define color for solidified pieces
+        context.fillStyle = piece.color;
+        context.strokeStyle = '#000000';
+        context.lineWidth = 0.04;
+        // Draw border for new piece
         context.fillRect(x + piece.position.x, y + piece.position.y, 1, 1);
+        context.strokeRect(x + piece.position.x, y + piece.position.y, 1, 1);
       }
     });
   });
 }
 
 function checkCollision() {
-  return piece.shape.find((row, y) => {
-    return row.find((value, x) => {
-      return (
-        value !== 0 && board[y + piece.position.y]?.[x + piece.position.x] !== 0
-      );
-    });
-  });
+  for (let y = 0; y < piece.shape.length; y++) {
+    for (let x = 0; x < piece.shape[y].length; x++) {
+      if (piece.shape[y][x] !== 0) {
+        const boardY = y + piece.position.y;
+        const boardX = x + piece.position.x;
+        if (
+          boardY >= CANVAS_CONFIG.BOARD_HEIGHT ||
+          boardX < 0 ||
+          boardX >= CANVAS_CONFIG.BOARD_WIDTH ||
+          (boardY >= 0 &&
+            boardY < CANVAS_CONFIG.BOARD_HEIGHT &&
+            boardX >= 0 &&
+            boardX < CANVAS_CONFIG.BOARD_WIDTH &&
+            board[boardY][boardX] !== 0)
+        ) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value === 1) {
-        board[y + piece.position.y][x + piece.position.x] = 1;
+        board[y + piece.position.y][x + piece.position.x] = piece.color;
       }
     });
   });
 
+  // Check and remove rows before resetting the position
+  checkAndRemoveRows();
+
   // reset position
-  piece.position.x = Math.floor(BOARD_WIDTH / 2);
+  piece.position.x = Math.floor(CANVAS_CONFIG.BOARD_WIDTH / 2);
   piece.position.y = 0;
-  // get ramdom piece
-  piece.shape = PIECES[Math.floor(Math.random() * PIECES.length)];
+  // get random piece
+  piece = generateRandomPiece();
   // Game over
   if (checkCollision()) {
     window.alert('Game Over');
@@ -111,27 +148,28 @@ function solidifyPiece() {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'ArrowLeft') {
+  if (event.key === EVENT_MOVEMENTS.LEFT) {
     piece.position.x--;
     if (checkCollision()) {
       piece.position.x++;
     }
   }
-  if (event.key === 'ArrowRight') {
+  if (event.key === EVENT_MOVEMENTS.RIGHT) {
     piece.position.x++;
     if (checkCollision()) {
       piece.position.x--;
     }
   }
-  if (event.key === 'ArrowDown') {
+  if (event.key === EVENT_MOVEMENTS.DOWN) {
     piece.position.y++;
     if (checkCollision()) {
       piece.position.y--;
       solidifyPiece();
-      removeRows();
+      checkAndRemoveRows();
+      piece = generateRandomPiece();
     }
   }
-  if (event.key === 'ArrowUp') {
+  if (event.key === EVENT_MOVEMENTS.UP) {
     const rotated = [];
 
     for (let i = 0; i < piece.shape[0].length; i++) {
@@ -150,17 +188,19 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-function removeRows() {
-  const rowsToRemove: any = [];
+function checkAndRemoveRows() {
+  const fullRows = [];
 
-  board.forEach((row, y) => {
-    if (row.every((value) => value === 1)) {
-      rowsToRemove.push(y);
+  for (let y = 0; y < CANVAS_CONFIG.BOARD_HEIGHT; y++) {
+    if (board[y].every((value) => value !== 0)) {
+      fullRows.push(y);
     }
-  });
-  rowsToRemove.forEach((y: any) => {
+  }
+
+  // Remove full rows and add new empty ones at the top
+  fullRows.forEach((y) => {
     board.splice(y, 1);
-    board.unshift(Array(BOARD_WIDTH).fill(0));
+    board.unshift(Array(CANVAS_CONFIG.BOARD_WIDTH).fill(0));
     score += 10;
   });
 }
