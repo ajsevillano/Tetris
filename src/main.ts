@@ -13,6 +13,10 @@ context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 const $score: any = document.querySelector('span');
 let score = 0;
 
+// Fall speed
+let fallSpeedIncrement = 0;
+let fallSpeed = 1000;
+
 const createBoard = (width: number, height: number) => {
   return Array(height)
     .fill(0)
@@ -43,11 +47,13 @@ let lastTime = 0;
 
 // Game loop
 function update(time = 0) {
+  // Increment fall speed every 100 points
+  incrementFallSpeed();
   const deltaTime = time - lastTime;
   lastTime = time;
-
+  console.log(fallSpeed);
   dropCounter += deltaTime;
-  if (dropCounter > 1000) {
+  if (dropCounter > fallSpeed) {
     piece.position.y++;
     if (checkCollision()) {
       piece.position.y--;
@@ -59,6 +65,16 @@ function update(time = 0) {
   }
   draw();
   window.requestAnimationFrame(update);
+}
+
+function incrementFallSpeed() {
+  if (score >= (fallSpeedIncrement + 1) * 100) {
+    fallSpeedIncrement++;
+    // Cap fall speed at 20
+    if (fallSpeed > 50) {
+      fallSpeed -= 50;
+    }
+  }
 }
 
 function draw() {
@@ -142,6 +158,10 @@ function solidifyPiece() {
   if (checkCollision()) {
     window.alert('Game Over');
     board.forEach((row) => row.fill(0));
+    // Reset the score and fall speed
+    score = 0;
+    fallSpeedIncrement = 0;
+    fallSpeed = 1000;
   }
 }
 
