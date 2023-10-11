@@ -17,6 +17,9 @@ let score = 0;
 let fallSpeedIncrement = 0;
 let fallSpeed = 1000;
 
+// Pause
+let isPaused = false;
+
 const createBoard = (width: number, height: number) => {
   return Array(height)
     .fill(0)
@@ -49,21 +52,23 @@ let lastTime = 0;
 function update(time = 0) {
   // Increment fall speed every 100 points
   incrementFallSpeed();
-  const deltaTime = time - lastTime;
-  lastTime = time;
-  console.log(fallSpeed);
-  dropCounter += deltaTime;
-  if (dropCounter > fallSpeed) {
-    piece.position.y++;
-    if (checkCollision()) {
-      piece.position.y--;
-      solidifyPiece();
-      checkAndRemoveRows();
-      piece = generateRandomPiece();
+  if (!isPaused) {
+    const deltaTime = time - lastTime;
+    lastTime = time;
+    console.log(fallSpeed);
+    dropCounter += deltaTime;
+    if (dropCounter > fallSpeed) {
+      piece.position.y++;
+      if (checkCollision()) {
+        piece.position.y--;
+        solidifyPiece();
+        checkAndRemoveRows();
+        piece = generateRandomPiece();
+      }
+      dropCounter = 0;
     }
-    dropCounter = 0;
+    draw();
   }
-  draw();
   window.requestAnimationFrame(update);
 }
 
@@ -165,46 +170,91 @@ function solidifyPiece() {
   }
 }
 
-document.addEventListener('keydown', (event) => {
-  if (event.key === EVENT_MOVEMENTS.LEFT) {
-    piece.position.x--;
-    if (checkCollision()) {
-      piece.position.x++;
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.RIGHT) {
-    piece.position.x++;
-    if (checkCollision()) {
+function handleKeyDown(event: any) {
+  if (!isPaused) {
+    if (event.key === EVENT_MOVEMENTS.LEFT) {
       piece.position.x--;
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.DOWN) {
-    piece.position.y++;
-    if (checkCollision()) {
-      piece.position.y--;
-      solidifyPiece();
-      checkAndRemoveRows();
-      piece = generateRandomPiece();
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.UP) {
-    const rotated = [];
-
-    for (let i = 0; i < piece.shape[0].length; i++) {
-      const row = [];
-
-      for (let j = piece.shape.length - 1; j >= 0; j--) {
-        row.push(piece.shape[j][i]);
+      if (checkCollision()) {
+        piece.position.x++;
       }
-      rotated.push(row);
     }
-    const previousShape = piece.shape;
-    piece.shape = rotated;
-    if (checkCollision()) {
-      piece.shape = previousShape;
+    if (event.key === EVENT_MOVEMENTS.RIGHT) {
+      piece.position.x++;
+      if (checkCollision()) {
+        piece.position.x--;
+      }
+    }
+    if (event.key === EVENT_MOVEMENTS.DOWN) {
+      piece.position.y++;
+      if (checkCollision()) {
+        piece.position.y--;
+        solidifyPiece();
+        checkAndRemoveRows();
+        piece = generateRandomPiece();
+      }
+    }
+    if (event.key === EVENT_MOVEMENTS.UP) {
+      if (event.key === EVENT_MOVEMENTS.UP) {
+        const rotated = [];
+
+        for (let i = 0; i < piece.shape[0].length; i++) {
+          const row = [];
+
+          for (let j = piece.shape.length - 1; j >= 0; j--) {
+            row.push(piece.shape[j][i]);
+          }
+          rotated.push(row);
+        }
+        const previousShape = piece.shape;
+        piece.shape = rotated;
+        if (checkCollision()) {
+          piece.shape = previousShape;
+        }
+      }
+    }
+  } else {
+    // Cambia la disponibilidad del event listener de keydown
+
+    document.removeEventListener('keydown', handleKeyDown);
+  }
+}
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'P' || event.key === 'p') {
+    isPaused = !isPaused;
+
+    if (isPaused) {
+      document.removeEventListener('keydown', handleKeyDown);
+    } else {
+      document.addEventListener('keydown', handleKeyDown);
     }
   }
 });
+
+// document.addEventListener('keydown', (event) => {
+//   if (event.key === EVENT_MOVEMENTS.LEFT) {
+//     piece.position.x--;
+//     if (checkCollision()) {
+//       piece.position.x++;
+//     }
+//   }
+//   if (event.key === EVENT_MOVEMENTS.RIGHT) {
+//     piece.position.x++;
+//     if (checkCollision()) {
+//       piece.position.x--;
+//     }
+//   }
+//   if (event.key === EVENT_MOVEMENTS.DOWN) {
+//     piece.position.y++;
+//     if (checkCollision()) {
+//       piece.position.y--;
+//       solidifyPiece();
+//       checkAndRemoveRows();
+//       piece = generateRandomPiece();
+//     }
+//   }
+
+// });
 
 function checkAndRemoveRows() {
   const fullRows = [];
