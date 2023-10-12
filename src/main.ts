@@ -1,6 +1,13 @@
+// Styles
 import './style.css';
-import TETROMINOES from './blocks';
-import { CANVAS_CONFIG, EVENT_MOVEMENTS } from './const';
+// Constants
+import { CANVAS_CONFIG, SPEED_CONFIG } from './const';
+// Libs
+import { handleKeyDown, handlePause } from './libs/keyboardEvents';
+import generateRandomPiece from './libs/generateRandomPiece';
+import checkCollision from './libs/checkCollisions';
+import incrementFallSpeed from './libs/incrementFallSpeed';
+import checkAndRemoveRows from './libs/removeRows';
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
@@ -10,12 +17,12 @@ canvas.height = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_HEIGHT;
 context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 
 // Score
-const $score: any = document.querySelector('span');
+const scoreElement: any = document.querySelector('span');
 let score = 0;
 
 // Fall speed
-let fallSpeedIncrement = 0;
-let fallSpeed = 1000;
+let level = 0;
+let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
 
 // Pause
 let isPaused = false;
@@ -34,35 +41,26 @@ const board = createBoard(
 
 let piece = generateRandomPiece();
 
-function generateRandomPiece() {
-  const randomTetromino =
-    TETROMINOES[Math.floor(Math.random() * TETROMINOES.length)];
-
-  return {
-    position: { x: 5, y: 0 },
-    shape: randomTetromino.shape,
-    color: randomTetromino.color,
-  };
-}
-
 let dropCounter = 0;
 let lastTime = 0;
 
 // Game loop
 function update(time = 0) {
-  // Increment fall speed every 100 points
-  incrementFallSpeed();
+  // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
+  const result = incrementFallSpeed(score, level, fallSpeed);
+  level = result.level;
+  fallSpeed = result.fallSpeed;
+
   if (!isPaused) {
     const deltaTime = time - lastTime;
     lastTime = time;
-    console.log(fallSpeed);
     dropCounter += deltaTime;
     if (dropCounter > fallSpeed) {
       piece.position.y++;
-      if (checkCollision()) {
+      if (checkCollision(piece, board)) {
         piece.position.y--;
         solidifyPiece();
-        checkAndRemoveRows();
+        checkAndRemoveRows(board, score);
         piece = generateRandomPiece();
       }
       dropCounter = 0;
@@ -70,16 +68,6 @@ function update(time = 0) {
     draw();
   }
   window.requestAnimationFrame(update);
-}
-
-function incrementFallSpeed() {
-  if (score >= (fallSpeedIncrement + 1) * 100) {
-    fallSpeedIncrement++;
-    // Cap fall speed at 20
-    if (fallSpeed > 50) {
-      fallSpeed -= 50;
-    }
-  }
 }
 
 function draw() {
@@ -96,7 +84,7 @@ function draw() {
     });
   });
 
-  $score.innerText = score;
+  scoreElement.innerText = score;
 
   // Loop through piece
   piece.shape.forEach((row: any[], y: number) => {
@@ -118,30 +106,6 @@ function createShapes(value: string, x: number, y: number) {
   context.strokeRect(x, y, 1, 1);
 }
 
-function checkCollision() {
-  for (let y = 0; y < piece.shape.length; y++) {
-    for (let x = 0; x < piece.shape[y].length; x++) {
-      if (piece.shape[y][x] !== 0) {
-        const boardY = y + piece.position.y;
-        const boardX = x + piece.position.x;
-        if (
-          boardY >= CANVAS_CONFIG.BOARD_HEIGHT ||
-          boardX < 0 ||
-          boardX >= CANVAS_CONFIG.BOARD_WIDTH ||
-          (boardY >= 0 &&
-            boardY < CANVAS_CONFIG.BOARD_HEIGHT &&
-            boardX >= 0 &&
-            boardX < CANVAS_CONFIG.BOARD_WIDTH &&
-            board[boardY][boardX] !== 0)
-        ) {
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -152,7 +116,8 @@ function solidifyPiece() {
   });
 
   // Check and remove rows before resetting the position
-  checkAndRemoveRows();
+  const newScore = checkAndRemoveRows(board, score);
+  score = newScore;
 
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.BOARD_WIDTH / 2);
@@ -160,117 +125,31 @@ function solidifyPiece() {
   // get random piece
   piece = generateRandomPiece();
   // Game over
-  if (checkCollision()) {
+  if (checkCollision(piece, board)) {
     window.alert('Game Over');
     board.forEach((row) => row.fill(0));
     // Reset the score and fall speed
     score = 0;
-    fallSpeedIncrement = 0;
+    level = 0;
     fallSpeed = 1000;
   }
 }
 
-function handleKeyDown(event: any) {
-  if (!isPaused) {
-    if (event.key === EVENT_MOVEMENTS.LEFT) {
-      piece.position.x--;
-      if (checkCollision()) {
-        piece.position.x++;
-      }
-    }
-    if (event.key === EVENT_MOVEMENTS.RIGHT) {
-      piece.position.x++;
-      if (checkCollision()) {
-        piece.position.x--;
-      }
-    }
-    if (event.key === EVENT_MOVEMENTS.DOWN) {
-      piece.position.y++;
-      if (checkCollision()) {
-        piece.position.y--;
-        solidifyPiece();
-        checkAndRemoveRows();
-        piece = generateRandomPiece();
-      }
-    }
-    if (event.key === EVENT_MOVEMENTS.UP) {
-      if (event.key === EVENT_MOVEMENTS.UP) {
-        const rotated = [];
-
-        for (let i = 0; i < piece.shape[0].length; i++) {
-          const row = [];
-
-          for (let j = piece.shape.length - 1; j >= 0; j--) {
-            row.push(piece.shape[j][i]);
-          }
-          rotated.push(row);
-        }
-        const previousShape = piece.shape;
-        piece.shape = rotated;
-        if (checkCollision()) {
-          piece.shape = previousShape;
-        }
-      }
-    }
-  } else {
-    // Cambia la disponibilidad del event listener de keydown
-
-    document.removeEventListener('keydown', handleKeyDown);
-  }
-}
-document.addEventListener('keydown', handleKeyDown);
+// Arrow key event listeners
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'P' || event.key === 'p') {
-    isPaused = !isPaused;
-
-    if (isPaused) {
-      document.removeEventListener('keydown', handleKeyDown);
-    } else {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-  }
+  handleKeyDown({
+    isPaused,
+    event,
+    piece,
+    board,
+    solidifyPiece,
+    generateRandomPiece,
+  });
 });
 
-// document.addEventListener('keydown', (event) => {
-//   if (event.key === EVENT_MOVEMENTS.LEFT) {
-//     piece.position.x--;
-//     if (checkCollision()) {
-//       piece.position.x++;
-//     }
-//   }
-//   if (event.key === EVENT_MOVEMENTS.RIGHT) {
-//     piece.position.x++;
-//     if (checkCollision()) {
-//       piece.position.x--;
-//     }
-//   }
-//   if (event.key === EVENT_MOVEMENTS.DOWN) {
-//     piece.position.y++;
-//     if (checkCollision()) {
-//       piece.position.y--;
-//       solidifyPiece();
-//       checkAndRemoveRows();
-//       piece = generateRandomPiece();
-//     }
-//   }
-
-// });
-
-function checkAndRemoveRows() {
-  const fullRows = [];
-
-  for (let y = 0; y < CANVAS_CONFIG.BOARD_HEIGHT; y++) {
-    if (board[y].every((value) => value !== 0)) {
-      fullRows.push(y);
-    }
-  }
-
-  // Remove full rows and add new empty ones at the top
-  fullRows.forEach((y) => {
-    board.splice(y, 1);
-    board.unshift(Array(CANVAS_CONFIG.BOARD_WIDTH).fill(0));
-    score += 10;
-  });
-}
+// Pause key event listener
+document.addEventListener('keydown', (event) => {
+  isPaused = handlePause(event, isPaused);
+});
 
 update();
