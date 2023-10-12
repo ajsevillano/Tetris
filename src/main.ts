@@ -101,7 +101,7 @@ function draw() {
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        createShapes(value, '#000000', x, y);
+        createShapes(value, '#2e2e2e', x, y);
       }
     });
   });
@@ -114,7 +114,7 @@ function draw() {
       if (value) {
         createShapes(
           piece.color,
-          piece.border,
+          '#2e2e2e',
           x + piece.position.x,
           y + piece.position.y,
         );
