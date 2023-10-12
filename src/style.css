@@ -1,12 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -15,9 +15,39 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  margin: 0 300px 0 0;
+}
+
+#app {
+  display: flex;
+  align-items: flex-start; /* Alinea al principio del eje vertical (alinea con canvas) */
+}
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea a la izquierda */
+  margin-right: 3rem;
+  background-color: #0e0e0e;
+  width: 200px;
+  height: 100px;
+  margin-top: 0;
+  border: 1px solid #d6d6d6;
+}
+
+.score-container {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin: 1rem auto;
+  font-size: 1rem;
+  font-family: 'Press Start 2P';
+}
+
+canvas {
+  border: 1px solid #d6d6d6; /* Agrega un borde al canvas si lo deseas */
 }
