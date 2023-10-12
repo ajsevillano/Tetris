@@ -8,5 +8,6 @@ export default function generateRandomPiece() {
     position: { x: 5, y: 0 },
     shape: randomTetromino.shape,
     color: randomTetromino.color,
+    border: randomTetromino.border,
   };
 }

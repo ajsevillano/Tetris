@@ -70,16 +70,38 @@ function update(time = 0) {
   window.requestAnimationFrame(update);
 }
 
+function drawGrid() {
+  const gridSize = 1; // Size of the grid blocks
+
+  context.strokeStyle = '#121212'; // Colour of the grid lines
+  context.lineWidth = 0.04; // Width of the grid lines
+
+  for (let x = 0; x < canvas.width; x += gridSize) {
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, canvas.height);
+    context.stroke();
+  }
+
+  for (let y = 0; y < canvas.height; y += gridSize) {
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(canvas.width, y);
+    context.stroke();
+  }
+}
+
 function draw() {
   // Draw the board
   context.fillStyle = '#000';
   context.fillRect(0, 0, canvas.width, canvas.height);
+  drawGrid();
 
-  // Loop through board
+  // Loop through board and create pieces on the botton when solidified
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        createShapes(value, x, y);
+        createShapes(value, '#000000', x, y);
       }
     });
   });
@@ -90,16 +112,21 @@ function draw() {
   piece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x) => {
       if (value) {
-        createShapes(piece.color, x + piece.position.x, y + piece.position.y);
+        createShapes(
+          piece.color,
+          piece.border,
+          x + piece.position.x,
+          y + piece.position.y,
+        );
       }
     });
   });
 }
 
-function createShapes(value: string, x: number, y: number) {
+function createShapes(value: string, border: any, x: number, y: number) {
   // Define color for pieces
   context.fillStyle = value;
-  context.strokeStyle = '#000000';
+  context.strokeStyle = border;
   context.lineWidth = 0.04;
   // Draw border for  pieces
   context.fillRect(x, y, 1, 1);
