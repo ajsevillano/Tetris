@@ -18,6 +18,7 @@ context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 
 // Score
 const scoreElement: any = document.querySelector('span');
+const levelElement: any = document.querySelector('.level');
 let score = 0;
 
 // Fall speed
@@ -107,6 +108,7 @@ function draw() {
   });
 
   scoreElement.innerText = score;
+  levelElement.innerText = level;
 
   // Loop through piece
   piece.shape.forEach((row: any[], y: number) => {
