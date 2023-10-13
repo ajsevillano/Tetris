@@ -14,7 +14,7 @@ export default function checkAndRemoveRows(board: any, score: any) {
   fullRows.forEach((y) => {
     board.splice(y, 1);
     board.unshift(Array(CANVAS_CONFIG.BOARD_WIDTH).fill(0));
-    updatedScore = score + 10;
   });
+  updatedScore += fullRows.length * 10;
   return updatedScore;
 }
