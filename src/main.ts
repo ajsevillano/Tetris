@@ -54,17 +54,14 @@ function gameLoop(time = 0) {
   level = result.level;
   fallSpeed = result.fallSpeed;
 
+  // Game over logic
   if (isGameOver) {
-    drawGameOverScreen(context); // Dibujar la pantalla de Game Over
-    // Restablecer el tablero y otras variables del juego
-
-    score = 0;
-    level = 0;
-    fallSpeed = 1000;
-    isGameOver = false; // Restablecer la bandera de Game Over
-    return; // Detener la lógica del juego
+    drawGameOverScreen(context);
+    // Stop the game loop
+    return;
   }
 
+  // Game pause logic
   if (!isPaused) {
     const deltaTime = time - lastTime;
     lastTime = time;
@@ -147,12 +144,7 @@ function solidifyPiece() {
   // Game over
   if (checkCollision(piece, board)) {
     isGameOver = true;
-
     board.forEach((row) => row.fill(0));
-    // Reset the score and fall speed
-    score = 0;
-    level = 0;
-    fallSpeed = 1000;
   }
 }
 
@@ -172,5 +164,26 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('keydown', (event) => {
   isPaused = handlePause(event, isPaused);
 });
+
+// Enter key event listener
+document.addEventListener('keydown', function (event) {
+  if (event.code === 'Enter') {
+    if (isGameOver) {
+      startGame();
+    }
+  }
+});
+
+function startGame() {
+  isGameOver = false;
+  // Empty the board & reset score
+  board.forEach((row) => row.fill(0));
+  score = 0;
+  level = 0;
+  fallSpeed = 1000;
+  // Generate the first piece
+  piece = generateRandomPiece();
+  gameLoop();
+}
 
 gameLoop();
