@@ -67,6 +67,10 @@ function update(time = 0) {
       dropCounter = 0;
     }
     draw();
+  } else {
+    context.font = "1px 'Press Start 2P'";
+    context.fillStyle = 'white';
+    context.fillText('PAUSED', 4, 15);
   }
   window.requestAnimationFrame(update);
 }
@@ -74,7 +78,7 @@ function update(time = 0) {
 function drawGrid() {
   const gridSize = 1; // Size of the grid blocks
 
-  context.strokeStyle = '#121212'; // Colour of the grid lines
+  context.strokeStyle = '#0d0d0d'; // Colour of the grid lines
   context.lineWidth = 0.04; // Width of the grid lines
 
   for (let x = 0; x < canvas.width; x += gridSize) {
@@ -94,7 +98,7 @@ function drawGrid() {
 
 function draw() {
   // Draw the board
-  context.fillStyle = '#000';
+  context.fillStyle = '#121212';
   context.fillRect(0, 0, canvas.width, canvas.height);
   drawGrid();
 
