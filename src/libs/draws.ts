@@ -1,4 +1,10 @@
-export function drawGrid(context: any, canvas: any) {
+export function drawBoard(context: any, canvas: any) {
+  context.fillStyle = '#121212';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  drawGridBackground(context, canvas);
+}
+
+function drawGridBackground(context: any, canvas: any) {
   const gridSize = 1; // Size of the grid blocks
   context.strokeStyle = '#0d0d0d'; // Colour of the grid lines
   context.lineWidth = 0.04; // Width of the grid lines
@@ -22,11 +28,6 @@ export function drawPauseScreen(context: any) {
   context.font = "1px 'Press Start 2P'";
   context.fillStyle = 'white';
   context.fillText('PAUSED', 4, 15);
-}
-
-export function drawBoard(context: any, canvas: any) {
-  context.fillStyle = '#121212';
-  context.fillRect(0, 0, canvas.width, canvas.height);
 }
 
 export function drawPieces(

@@ -8,7 +8,7 @@ import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
-import { drawGrid, drawBoard, drawPauseScreen, drawPieces } from './libs/draws';
+import { drawBoard, drawPauseScreen, drawPieces } from './libs/draws';
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
@@ -29,14 +29,14 @@ let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
 // Pause
 let isPaused = false;
 
-const createBoard = (width: number, height: number) => {
+const createBoardMatrix = (width: number, height: number) => {
   return Array(height)
     .fill(0)
     .map(() => Array(width).fill(0));
 };
 
 // Board
-const board = createBoard(
+const board = createBoardMatrix(
   CANVAS_CONFIG.BOARD_WIDTH,
   CANVAS_CONFIG.BOARD_HEIGHT,
 );
@@ -73,9 +73,8 @@ function gameLoop(time = 0) {
 }
 
 function renderTetrisBoard() {
-  // Draw the board & grid
+  // Draw the board & it background grid
   drawBoard(context, canvas);
-  drawGrid(context, canvas);
 
   // Loop through board and create pieces on the botton when solidified
   board.forEach((row, y) => {
