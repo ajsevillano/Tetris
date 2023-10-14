@@ -29,6 +29,9 @@ let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
 // Pause
 let isPaused = false;
 
+// Game over
+let isGameOver = false;
+
 const createBoardMatrix = (width: number, height: number) => {
   return Array(height)
     .fill(0)
@@ -50,6 +53,17 @@ function gameLoop(time = 0) {
   const result = incrementFallSpeed(score, level, fallSpeed);
   level = result.level;
   fallSpeed = result.fallSpeed;
+
+  if (isGameOver) {
+    drawGameOverScreen(context); // Dibujar la pantalla de Game Over
+    // Restablecer el tablero y otras variables del juego
+
+    score = 0;
+    level = 0;
+    fallSpeed = 1000;
+    isGameOver = false; // Restablecer la bandera de Game Over
+    return; // Detener la lógica del juego
+  }
 
   if (!isPaused) {
     const deltaTime = time - lastTime;
@@ -104,6 +118,14 @@ function renderTetrisBoard() {
   });
 }
 
+function drawGameOverScreen(context: any) {
+  context.fillStyle = 'black';
+  context.fillRect(2, 14, 9, 1);
+  context.font = "1px 'Press Start 2P'";
+  context.fillStyle = 'white';
+  context.fillText('GAME OVER', 2, 15);
+}
+
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -124,7 +146,8 @@ function solidifyPiece() {
   piece = generateRandomPiece();
   // Game over
   if (checkCollision(piece, board)) {
-    window.alert('Game Over');
+    isGameOver = true;
+
     board.forEach((row) => row.fill(0));
     // Reset the score and fall speed
     score = 0;
