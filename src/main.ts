@@ -9,6 +9,7 @@ import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
+import { addPauseKeyEventListener } from './eventListeners';
 import {
   drawBoard,
   drawPauseScreen,
@@ -165,7 +166,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 // Pause key event listener
-document.addEventListener('keydown', (event) => {
+addPauseKeyEventListener((event: any) => {
   isPaused = handlePause(event, isPaused);
 });
 
