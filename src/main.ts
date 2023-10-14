@@ -8,7 +8,13 @@ import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
-import { drawBoard, drawPauseScreen, drawPieces } from './libs/draws';
+import createBoardMatrix from './libs/createBoardMatrix';
+import {
+  drawBoard,
+  drawPauseScreen,
+  drawPieces,
+  drawGameOverScreen,
+} from './libs/draws';
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
@@ -20,23 +26,19 @@ context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 // Score
 const scoreElement: any = document.querySelector('span');
 const levelElement: any = document.querySelector('.level');
-let score = 0;
 
+// STATES
+let score = 0;
 // Fall speed
 let level = 0;
 let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
-
 // Pause
 let isPaused = false;
-
 // Game over
 let isGameOver = false;
-
-const createBoardMatrix = (width: number, height: number) => {
-  return Array(height)
-    .fill(0)
-    .map(() => Array(width).fill(0));
-};
+// Drop counter
+let dropCounter = 0;
+let lastTime = 0;
 
 // Board
 const board = createBoardMatrix(
@@ -45,8 +47,6 @@ const board = createBoardMatrix(
 );
 
 let piece = generateRandomPiece();
-let dropCounter = 0;
-let lastTime = 0;
 
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
@@ -115,14 +115,6 @@ function renderTetrisBoard() {
   });
 }
 
-function drawGameOverScreen(context: any) {
-  context.fillStyle = 'black';
-  context.fillRect(2, 14, 9, 1);
-  context.font = "1px 'Press Start 2P'";
-  context.fillStyle = 'white';
-  context.fillText('GAME OVER', 2, 15);
-}
-
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
@@ -148,6 +140,18 @@ function solidifyPiece() {
   }
 }
 
+function reStartGame() {
+  isGameOver = false;
+  // Empty the board & reset score
+  board.forEach((row) => row.fill(0));
+  score = 0;
+  level = 0;
+  fallSpeed = 1000;
+  // Generate the first piece
+  piece = generateRandomPiece();
+  gameLoop();
+}
+
 // Arrow key event listeners
 document.addEventListener('keydown', (event) => {
   handleKeyDown({
@@ -166,24 +170,12 @@ document.addEventListener('keydown', (event) => {
 });
 
 // Enter key event listener
-document.addEventListener('keydown', function (event) {
+document.addEventListener('keydown', (event) => {
   if (event.code === 'Enter') {
     if (isGameOver) {
-      startGame();
+      reStartGame();
     }
   }
 });
-
-function startGame() {
-  isGameOver = false;
-  // Empty the board & reset score
-  board.forEach((row) => row.fill(0));
-  score = 0;
-  level = 0;
-  fallSpeed = 1000;
-  // Generate the first piece
-  piece = generateRandomPiece();
-  gameLoop();
-}
 
 gameLoop();

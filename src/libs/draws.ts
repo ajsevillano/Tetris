@@ -25,9 +25,19 @@ function drawGridBackground(context: any, canvas: any) {
 }
 
 export function drawPauseScreen(context: any) {
+  context.fillStyle = 'black';
+  context.fillRect(4, 14, 6, 1);
   context.font = "1px 'Press Start 2P'";
   context.fillStyle = 'white';
   context.fillText('PAUSED', 4, 15);
+}
+
+export function drawGameOverScreen(context: any) {
+  context.fillStyle = 'black';
+  context.fillRect(2, 14, 9, 1);
+  context.font = "1px 'Press Start 2P'";
+  context.fillStyle = 'white';
+  context.fillText('GAME OVER', 2, 15);
 }
 
 export function drawPieces(
