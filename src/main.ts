@@ -8,6 +8,7 @@ import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
+import { drawGrid, drawBoard, drawPauseScreen, drawPieces } from './libs/draws';
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
@@ -41,12 +42,10 @@ const board = createBoard(
 );
 
 let piece = generateRandomPiece();
-
 let dropCounter = 0;
 let lastTime = 0;
 
-// Game loop
-function update(time = 0) {
+function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
   const result = incrementFallSpeed(score, level, fallSpeed);
   level = result.level;
@@ -66,47 +65,23 @@ function update(time = 0) {
       }
       dropCounter = 0;
     }
-    draw();
+    renderTetrisBoard();
   } else {
-    context.font = "1px 'Press Start 2P'";
-    context.fillStyle = 'white';
-    context.fillText('PAUSED', 4, 15);
+    drawPauseScreen(context);
   }
-  window.requestAnimationFrame(update);
+  window.requestAnimationFrame(gameLoop);
 }
 
-function drawGrid() {
-  const gridSize = 1; // Size of the grid blocks
-
-  context.strokeStyle = '#0d0d0d'; // Colour of the grid lines
-  context.lineWidth = 0.04; // Width of the grid lines
-
-  for (let x = 0; x < canvas.width; x += gridSize) {
-    context.beginPath();
-    context.moveTo(x, 0);
-    context.lineTo(x, canvas.height);
-    context.stroke();
-  }
-
-  for (let y = 0; y < canvas.height; y += gridSize) {
-    context.beginPath();
-    context.moveTo(0, y);
-    context.lineTo(canvas.width, y);
-    context.stroke();
-  }
-}
-
-function draw() {
-  // Draw the board
-  context.fillStyle = '#121212';
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  drawGrid();
+function renderTetrisBoard() {
+  // Draw the board & grid
+  drawBoard(context, canvas);
+  drawGrid(context, canvas);
 
   // Loop through board and create pieces on the botton when solidified
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        createShapes(value, '#2e2e2e', x, y);
+        drawPieces(value, '#2e2e2e', x, y, context);
       }
     });
   });
@@ -114,29 +89,20 @@ function draw() {
   scoreElement.innerText = score;
   levelElement.innerText = level;
 
-  // Loop through piece
+  // Loop through piece and create the falling pieces
   piece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x) => {
       if (value) {
-        createShapes(
+        drawPieces(
           piece.color,
           '#2e2e2e',
           x + piece.position.x,
           y + piece.position.y,
+          context,
         );
       }
     });
   });
-}
-
-function createShapes(value: string, border: any, x: number, y: number) {
-  // Define color for pieces
-  context.fillStyle = value;
-  context.strokeStyle = border;
-  context.lineWidth = 0.04;
-  // Draw border for  pieces
-  context.fillRect(x, y, 1, 1);
-  context.strokeRect(x, y, 1, 1);
 }
 
 function solidifyPiece() {
@@ -185,4 +151,4 @@ document.addEventListener('keydown', (event) => {
   isPaused = handlePause(event, isPaused);
 });
 
-update();
+gameLoop();
