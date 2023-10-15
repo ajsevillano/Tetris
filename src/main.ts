@@ -3,15 +3,17 @@ import './style.css';
 // Constants
 import { CANVAS_CONFIG, SPEED_CONFIG } from './const';
 // Libs
-import { handleKeyDown, handlePause } from './libs/keyboardEvents';
+import { handlePause } from './libs/keyboardEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
 import {
+  addArrowKeyEventListener,
   addEnterKeyEventListener,
   addPauseKeyEventListener,
+  addRkeyEventListener,
 } from './eventListeners';
 import {
   drawBoard,
@@ -145,41 +147,48 @@ function solidifyPiece() {
 }
 
 function reStartGame() {
-  isGameOver = false;
   // Empty the board & reset score
   board.forEach((row) => row.fill(0));
   score = 0;
   level = 0;
-  fallSpeed = 1000;
-  // Generate the first piece
-  piece = generateRandomPiece();
+  fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
   // Set the initial position of the piece
   piece.position.x = 5;
   piece.position.y = -1;
+  isGameOver = false;
   gameLoop();
 }
 
+// EVENT LISTENERS
+
+// Getters
+const getPiece = () => piece;
+const getBoard = () => board;
+
 // Arrow key event listeners
-document.addEventListener('keydown', (event) => {
-  handleKeyDown({
-    isPaused,
-    event,
-    piece,
-    board,
-    solidifyPiece,
-    generateRandomPiece,
-  });
-});
+addArrowKeyEventListener(
+  isPaused,
+  getPiece,
+  getBoard,
+  solidifyPiece,
+  generateRandomPiece,
+);
 
 // Pause key event listener
 addPauseKeyEventListener((event: any) => {
   isPaused = handlePause(event, isPaused);
 });
 
+// Enter key event listener
 addEnterKeyEventListener(() => {
   if (isGameOver) {
     reStartGame();
   }
+});
+
+// R key event listener
+addRkeyEventListener(() => {
+  reStartGame();
 });
 
 gameLoop();

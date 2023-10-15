@@ -1,3 +1,27 @@
+import { handleKeyDown } from './libs/keyboardEvents';
+
+// Arrow key event listeners
+export function addArrowKeyEventListener(
+  isPaused: boolean,
+  getPiece: () => void,
+  getBoard: () => void,
+  solidifyPiece: () => void,
+  generateRandomPiece: () => void,
+) {
+  document.addEventListener('keydown', (event) => {
+    const piece = getPiece();
+    const board = getBoard();
+    handleKeyDown({
+      isPaused,
+      event,
+      piece,
+      board,
+      solidifyPiece,
+      generateRandomPiece,
+    });
+  });
+}
+
 // Pause key event listener
 export function addPauseKeyEventListener(callback: any) {
   document.addEventListener('keydown', (event) => {
@@ -14,8 +38,10 @@ export function addEnterKeyEventListener(callback: any) {
   });
 }
 
-export function addArrowKeyEventListener(callback: any) {
+export function addRkeyEventListener(callback: any) {
   document.addEventListener('keydown', (event) => {
-    callback(event);
+    if (event.code === 'KeyR' || event.code === 'Keyr') {
+      callback();
+    }
   });
 }
