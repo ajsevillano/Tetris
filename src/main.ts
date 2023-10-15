@@ -156,6 +156,7 @@ function reStartGame() {
   piece.position.x = 5;
   piece.position.y = -1;
   isGameOver = false;
+  piece = generateRandomPiece();
   gameLoop();
 }
 

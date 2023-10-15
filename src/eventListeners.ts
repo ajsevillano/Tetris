@@ -1,6 +1,6 @@
 import { handleKeyDown } from './libs/keyboardEvents';
 
-// Arrow key event listeners
+// Arrow keys event listeners
 export function addArrowKeyEventListener(
   isPaused: boolean,
   getPiece: () => void,
@@ -38,6 +38,7 @@ export function addEnterKeyEventListener(callback: any) {
   });
 }
 
+// R key event listener
 export function addRkeyEventListener(callback: any) {
   document.addEventListener('keydown', (event) => {
     if (event.code === 'KeyR' || event.code === 'Keyr') {
