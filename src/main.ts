@@ -153,6 +153,9 @@ function reStartGame() {
   fallSpeed = 1000;
   // Generate the first piece
   piece = generateRandomPiece();
+  // Set the initial position of the piece
+  piece.position.x = 5;
+  piece.position.y = -1;
   gameLoop();
 }
 
