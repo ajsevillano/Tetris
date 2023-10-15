@@ -29,6 +29,13 @@ canvas.width = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_WIDTH;
 canvas.height = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_HEIGHT;
 context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 
+// Next piece canvas
+const nextPieceCanvas: any = document.getElementById('nextPieceCanvas');
+const nextPieceContext = nextPieceCanvas.getContext('2d');
+
+nextPieceContext.fillStyle = '#0d0d0d';
+nextPieceContext.fillRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
+
 // Score
 const scoreElement: any = document.querySelector('span');
 const levelElement: any = document.querySelector('.level');
