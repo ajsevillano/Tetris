@@ -9,7 +9,10 @@ import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
-import { addPauseKeyEventListener } from './eventListeners';
+import {
+  addEnterKeyEventListener,
+  addPauseKeyEventListener,
+} from './eventListeners';
 import {
   drawBoard,
   drawPauseScreen,
@@ -170,12 +173,9 @@ addPauseKeyEventListener((event: any) => {
   isPaused = handlePause(event, isPaused);
 });
 
-// Enter key event listener
-document.addEventListener('keydown', (event) => {
-  if (event.code === 'Enter') {
-    if (isGameOver) {
-      reStartGame();
-    }
+addEnterKeyEventListener(() => {
+  if (isGameOver) {
+    reStartGame();
   }
 });
 
