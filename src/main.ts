@@ -61,6 +61,47 @@ const board = createBoardMatrix(
 
 let piece = generateRandomPiece();
 
+//////////////////////////////// NUEVO ///////////////////////////////////////
+// Nueva función para generar la siguiente pieza
+let nextPiece = generateRandomPiece();
+
+// Función para mostrar la siguiente pieza en nextPieceCanvas
+function drawNextPieceOnCanvas(piece: any) {
+  nextPieceContext.clearRect(
+    0,
+    0,
+    nextPieceCanvas.width,
+    nextPieceCanvas.height,
+  );
+
+  const scale = 15; // Puedes ajustar el valor de escala según tus preferencias
+
+  const pieceWidth = piece.shape[0].length;
+  const pieceHeight = piece.shape.length;
+
+  // Calcula el tamaño escalado de la pieza
+  const scaledWidth = pieceWidth * scale;
+  const scaledHeight = pieceHeight * scale;
+
+  // Ajusta el desplazamiento para centrar la pieza
+  const offsetX = (nextPieceCanvas.width - scaledWidth) / 2;
+  const offsetY = (nextPieceCanvas.height - scaledHeight) / 2;
+
+  // Dibuja la siguiente pieza escalada en el nextPieceCanvas
+  piece.shape.forEach((row: any[], y: number) => {
+    row.forEach((value, x: number) => {
+      if (value) {
+        const xPos = x * scale + offsetX;
+        const yPos = y * scale + offsetY;
+        nextPieceContext.fillStyle = piece.color;
+        nextPieceContext.fillRect(xPos, yPos, scale, scale);
+      }
+    });
+  });
+}
+
+//////////////////////////////// FIN DE NUEVO ///////////////////////////////////////
+
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
   const result = incrementFallSpeed(score, level, fallSpeed);
@@ -151,6 +192,9 @@ function solidifyPiece() {
     isGameOver = true;
     board.forEach((row) => row.fill(0));
   }
+  // Cambiar a la siguiente pieza en nextPieceCanvas
+  nextPiece = generateRandomPiece();
+  drawNextPieceOnCanvas(nextPiece);
 }
 
 function reStartGame() {
@@ -198,5 +242,6 @@ addEnterKeyEventListener(() => {
 addRkeyEventListener(() => {
   reStartGame();
 });
+drawNextPieceOnCanvas(nextPiece);
 
 gameLoop();
