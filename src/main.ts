@@ -98,11 +98,13 @@ function drawNextPieceOnCanvas(piece: any) {
           x: xPos,
           y: yPos,
           context: nextPieceContext,
-          lineWidth: 0.5,
+          lineWidth: 2,
           width: scale,
           height: scale,
         };
-
+        // Apply a shadow effect to the next piece
+        nextPieceContext.strokeStyle = '#383838';
+        nextPieceContext.strokeRect(xPos + 5, yPos + 5, 21, 21);
         drawPieces(pieceProps);
       }
     });
