@@ -39,11 +39,12 @@ h6 {
   align-items: flex-start; /* Alinea al principio del eje vertical (alinea con canvas) */
 }
 
-.score-container {
+.score-container,
+.level-container {
   display: flex;
   width: 80%;
   justify-content: space-between;
-  margin: 0.8rem auto;
+  margin: 1rem;
   font-size: 1rem;
   font-family: 'Press Start 2P';
 }
@@ -56,33 +57,48 @@ canvas {
   margin-left: 3rem;
 }
 
-.next-piece-canvas-container p,
-.stats-and-help P {
-  font-family: 'Press Start 2P';
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
 .next-piece-canvas-container canvas {
   border: 1px solid #d6d6d6;
   justify-content: space-between;
 }
 
-.stats-and-help {
+.left-side-panels-container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin-right: 3rem;
 }
 
-.stats-container {
+.stats-container,
+.controls-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Alinea a la izquierda */
-
+  align-items: center;
   background-color: #121212;
   width: 200px;
-  height: 100px;
-  margin-top: 0;
   border: 1px solid #d6d6d6;
+  margin-bottom: 3rem;
+  font-family: 'Press Start 2P';
+}
+
+.controls-title,
+.stats-title,
+.next-piece-title {
+  font-family: 'Press Start 2P';
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.controls-container__left,
+.controls-container__right,
+.controls-container__down,
+.controls-container__rotate,
+.controls-container__pause,
+.controls-container__restart {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem;
+  width: 80%;
 }

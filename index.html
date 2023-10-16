@@ -9,32 +9,56 @@
   <body>
     <div id="app">
       <!-- Stats container -->
-      <div class="stats-and-help">
-        <p>STATS</p>
-        <div class="stats-container">
-          <div class="score-container">
-            Score
-            <span></span>
+      <div class="left-side-panels-container">
+        <div id="container">
+          <p class="stats-title">STATS</p>
+          <div class="stats-container">
+            <div class="score-container">
+              <p>Score</p>
+              <span></span>
+            </div>
+            <div class="level-container">
+              <p>Level</p>
+              <span class="level"></span>
+            </div>
           </div>
-          <div class="score-container">Level <span class="level"></span></div>
         </div>
-        <div class="stats-container">
-          <div class="score-container">
-            <p>Pause</p>
-            <p>P</p>
-          </div>
-          <div class="score-container">
-            <p>Restart</p>
-            <p>R</p>
+        <div id="container">
+          <p class="controls-title">CONTROLS</p>
+          <div class="controls-container">
+            <div class="controls-container__left">
+              <p>Left</p>
+              <p>←</p>
+            </div>
+            <div class="controls-container__right">
+              <p>Right</p>
+              <p>→</p>
+            </div>
+            <div class="controls-container__down">
+              <p>Down</p>
+              <p>↓</p>
+            </div>
+            <div class="controls-container__rotate">
+              <p>Rotate</p>
+              <p>↑</p>
+            </div>
+            <div class="controls-container__pause">
+              <p>Pause</p>
+              <p>P</p>
+            </div>
+            <div class="controls-container__restart">
+              <p>ReStart</p>
+              <p>↵</p>
+            </div>
           </div>
         </div>
       </div>
       <!-- End Stats container -->
       <!-- Main canvas -->
       <canvas></canvas>
-      <!-- End of main container -->
+      <!-- End of main canvas -->
       <div class="next-piece-canvas-container">
-        <p>NEXT</p>
+        <p class="next-piece-title">NEXT</p>
         <canvas id="nextPieceCanvas"></canvas>
       </div>
     </div>
