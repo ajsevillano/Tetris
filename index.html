@@ -10,6 +10,7 @@
     <div id="app">
       <!-- Stats container -->
       <div class="stats-and-help">
+        <p>STATS</p>
         <div class="stats-container">
           <div class="score-container">
             Score
@@ -29,13 +30,13 @@
         </div>
       </div>
       <!-- End Stats container -->
+      <!-- Main canvas -->
       <canvas></canvas>
-      <canvas
-        id="nextPieceCanvas"
-        width="100"
-        height="100"
-        class="next-piece-canvas"
-      ></canvas>
+      <!-- End of main container -->
+      <div class="next-piece-canvas-container">
+        <p>NEXT</p>
+        <canvas id="nextPieceCanvas"></canvas>
+      </div>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

@@ -24,7 +24,7 @@ import {
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
-const context = canvas?.getContext('2d');
+const context = canvas.getContext('2d');
 canvas.width = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_WIDTH;
 canvas.height = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_HEIGHT;
 context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
@@ -33,12 +33,12 @@ context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
 const nextPieceCanvas: any = document.getElementById('nextPieceCanvas');
 const nextPieceContext = nextPieceCanvas.getContext('2d');
 
-nextPieceContext.fillStyle = '#0d0d0d';
-nextPieceContext.fillRect(0, 0, nextPieceCanvas.width, nextPieceCanvas.height);
-
 // Score
 const scoreElement: any = document.querySelector('span');
 const levelElement: any = document.querySelector('.level');
+
+nextPieceCanvas.width = 140;
+nextPieceCanvas.height = 140;
 
 // STATES
 let score = 0;
@@ -52,6 +52,9 @@ let isGameOver = false;
 // Drop counter
 let dropCounter = 0;
 let lastTime = 0;
+// Pieces
+let piece = generateRandomPiece();
+let nextPiece = generateRandomPiece();
 
 // Board
 const board = createBoardMatrix(
@@ -59,22 +62,18 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.BOARD_HEIGHT,
 );
 
-let piece = generateRandomPiece();
-
-//////////////////////////////// NUEVO ///////////////////////////////////////
-// Nueva función para generar la siguiente pieza
-let nextPiece = generateRandomPiece();
-
 // Función para mostrar la siguiente pieza en nextPieceCanvas
 function drawNextPieceOnCanvas(piece: any) {
-  nextPieceContext.clearRect(
+  nextPieceContext.fillStyle = '#0d0d0d';
+  // Fill the canvas with the background color
+  nextPieceContext.fillRect(
     0,
     0,
     nextPieceCanvas.width,
     nextPieceCanvas.height,
   );
 
-  const scale = 15; // Puedes ajustar el valor de escala según tus preferencias
+  const scale = 24;
 
   const pieceWidth = piece.shape[0].length;
   const pieceHeight = piece.shape.length;
@@ -93,14 +92,22 @@ function drawNextPieceOnCanvas(piece: any) {
       if (value) {
         const xPos = x * scale + offsetX;
         const yPos = y * scale + offsetY;
-        nextPieceContext.fillStyle = piece.color;
-        nextPieceContext.fillRect(xPos, yPos, scale, scale);
+        const pieceProps = {
+          value: piece.color,
+          border: piece.border,
+          x: xPos,
+          y: yPos,
+          context: nextPieceContext,
+          lineWidth: 0.5,
+          width: scale,
+          height: scale,
+        };
+
+        drawPieces(pieceProps);
       }
     });
   });
 }
-
-//////////////////////////////// FIN DE NUEVO ///////////////////////////////////////
 
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
@@ -145,7 +152,18 @@ function renderTetrisBoard() {
   board.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        drawPieces(value, '#2e2e2e', x, y, context);
+        const pieceProps = {
+          value: value,
+          border: '#2e2e2e',
+          x: x,
+          y: y,
+          context: context,
+          lineWidth: 0.04,
+          width: 1,
+          height: 1,
+        };
+
+        drawPieces(pieceProps);
       }
     });
   });
@@ -157,13 +175,18 @@ function renderTetrisBoard() {
   piece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x) => {
       if (value) {
-        drawPieces(
-          piece.color,
-          '#2e2e2e',
-          x + piece.position.x,
-          y + piece.position.y,
-          context,
-        );
+        const pieceProps = {
+          value: piece.color,
+          border: '#2e2e2e',
+          x: x + piece.position.x,
+          y: y + piece.position.y,
+          context: context,
+          lineWidth: 0.04,
+          width: 1,
+          height: 1,
+        };
+
+        drawPieces(pieceProps);
       }
     });
   });
@@ -186,7 +209,7 @@ function solidifyPiece() {
   piece.position.x = Math.floor(CANVAS_CONFIG.BOARD_WIDTH / 2);
   piece.position.y = 0;
   // get random piece
-  piece = generateRandomPiece();
+  piece = nextPiece;
   // Game over
   if (checkCollision(piece, board)) {
     isGameOver = true;

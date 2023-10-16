@@ -40,18 +40,32 @@ export function drawGameOverScreen(context: any) {
   context.fillText('GAME OVER', 2, 15);
 }
 
-export function drawPieces(
-  value: string,
-  border: any,
-  x: number,
-  y: number,
-  context: any,
-) {
+interface DrawPiecesProps {
+  value: string;
+  border: string;
+  x: number;
+  y: number;
+  context: CanvasRenderingContext2D;
+  lineWidth: number;
+  width: number;
+  height: number;
+}
+
+export function drawPieces({
+  value,
+  border,
+  x,
+  y,
+  context,
+  lineWidth,
+  width,
+  height,
+}: DrawPiecesProps) {
   // Define color for pieces
   context.fillStyle = value;
   context.strokeStyle = border;
-  context.lineWidth = 0.04;
+  context.lineWidth = lineWidth;
   // Draw border for  pieces
-  context.fillRect(x, y, 1, 1);
-  context.strokeRect(x, y, 1, 1);
+  context.fillRect(x, y, width, height);
+  context.strokeRect(x, y, width, height);
 }
