@@ -2,6 +2,7 @@ import { CANVAS_CONFIG } from '../const';
 
 export default function checkAndRemoveRows(board: any, score: any) {
   const fullRows = [];
+  let linesRemoved = 0;
   let updatedScore = score;
 
   for (let y = 0; y < CANVAS_CONFIG.MAIN.BOARD_HEIGHT; y++) {
@@ -14,7 +15,18 @@ export default function checkAndRemoveRows(board: any, score: any) {
   fullRows.forEach((y) => {
     board.splice(y, 1);
     board.unshift(Array(CANVAS_CONFIG.MAIN.BOARD_WIDTH).fill(0));
+    linesRemoved++;
   });
-  updatedScore += fullRows.length * 10;
+
+  if (linesRemoved === 1) {
+    updatedScore += 10;
+  } else if (linesRemoved === 2) {
+    updatedScore += 30;
+  } else if (linesRemoved === 3) {
+    updatedScore += 50;
+  } else if (linesRemoved === 4) {
+    updatedScore += 80;
+  }
+
   return updatedScore;
 }
