@@ -39,11 +39,13 @@ nextPieceCanvas.height =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
 // Score
-const scoreElement: any = document.querySelector('span');
+const linesElement: any = document.querySelector('#lines');
 const levelElement: any = document.querySelector('.level');
 
 // STATES
 let score = SCORE_CONFIG.INITIAL_SCORE;
+// Total lines removed
+let totalLinesRemoved = 0;
 // Fall speed
 let level = SCORE_CONFIG.INITIAL_LEVEL;
 let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
@@ -68,7 +70,7 @@ const board = createBoardMatrix(
 
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
-  const result = incrementFallSpeed(score, level, fallSpeed);
+  const result = incrementFallSpeed(score, level, fallSpeed, totalLinesRemoved);
   level = result.level;
   fallSpeed = result.fallSpeed;
   // Render the next piece on the nextPieceCanvas
@@ -91,7 +93,10 @@ function gameLoop(time = 0) {
       if (checkCollision(piece, board)) {
         piece.position.y--;
         solidifyPiece();
-        checkAndRemoveRows(board, score);
+        const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
+        score = newScore.updatedScore;
+        totalLinesRemoved = newScore.totalLinesRemoved;
+
         piece = generateRandomPiece();
       }
       dropCounter = 0;
@@ -147,7 +152,7 @@ function renderTetrisBoard() {
     });
   });
 
-  scoreElement.innerText = score;
+  linesElement.innerText = totalLinesRemoved;
   levelElement.innerText = level;
 }
 
@@ -164,8 +169,9 @@ function solidifyPiece() {
   });
 
   // Check and remove rows before resetting the position
-  const newScore = checkAndRemoveRows(board, score);
-  score = newScore;
+  const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
+  score = newScore.updatedScore;
+  totalLinesRemoved = newScore.totalLinesRemoved;
 
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);

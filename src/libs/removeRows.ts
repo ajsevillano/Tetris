@@ -1,6 +1,10 @@
-import { CANVAS_CONFIG } from '../const';
+import { CANVAS_CONFIG, SCORE_CONFIG } from '../const';
 
-export default function checkAndRemoveRows(board: any, score: any) {
+export default function checkAndRemoveRows(
+  board: any,
+  score: any,
+  totalLinesRemoved: number,
+) {
   const fullRows = [];
   let linesRemoved = 0;
   let updatedScore = score;
@@ -18,15 +22,24 @@ export default function checkAndRemoveRows(board: any, score: any) {
     linesRemoved++;
   });
 
-  if (linesRemoved === 1) {
-    updatedScore += 10;
-  } else if (linesRemoved === 2) {
-    updatedScore += 30;
-  } else if (linesRemoved === 3) {
-    updatedScore += 50;
-  } else if (linesRemoved === 4) {
-    updatedScore += 80;
+  totalLinesRemoved += linesRemoved;
+
+  switch (linesRemoved) {
+    case 1:
+      updatedScore += SCORE_CONFIG.ONE_ROW;
+      break;
+    case 2:
+      updatedScore += SCORE_CONFIG.TWO_ROWS;
+      break;
+    case 3:
+      updatedScore += SCORE_CONFIG.THREE_ROWS;
+      break;
+    case 4:
+      updatedScore += SCORE_CONFIG.FOUR_ROWS;
+      break;
+    default:
+      break;
   }
 
-  return updatedScore;
+  return { updatedScore, totalLinesRemoved };
 }

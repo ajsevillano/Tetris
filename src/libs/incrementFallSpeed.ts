@@ -4,11 +4,12 @@ export default function incrementFallSpeed(
   score: any,
   level: any,
   fallSpeed: any,
+  totalLinesRemoved: number,
 ) {
   let updatedLevel = level;
   let updatedFallSpeed = fallSpeed;
 
-  if (score >= (level + 1) * SCORE_CONFIG.POINTS_NEXT_LEVEL) {
+  if (totalLinesRemoved >= (level + 1) * SCORE_CONFIG.LINES_NEXT_LEVEL) {
     updatedLevel++;
 
     // Cap fall speed at 20

@@ -21,14 +21,14 @@ export const EVENT_MOVEMENTS = {
 };
 
 export const SCORE_CONFIG = {
-  POINTS_NEXT_LEVEL: 100,
+  LINES_NEXT_LEVEL: 10,
   INITIAL_SCORE: 0,
   INITIAL_LEVEL: 0,
-  // FUTURE IMPLEMENTATION
-  // ONE_ROW: 100,
-  // TWO_ROWS: 300,
-  // THREE_ROWS: 500,
-  // FOUR_ROWS: 800,
+  // Original BPS scoring system
+  ONE_ROW: 40,
+  TWO_ROWS: 100,
+  THREE_ROWS: 300,
+  FOUR_ROWS: 1200,
 };
 
 export const SPEED_CONFIG = {
