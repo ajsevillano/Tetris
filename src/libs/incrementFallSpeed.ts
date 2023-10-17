@@ -1,7 +1,6 @@
 import { SCORE_CONFIG, SPEED_CONFIG } from '../const';
 
 export default function incrementFallSpeed(
-  score: any,
   level: any,
   fallSpeed: any,
   totalLinesRemoved: number,

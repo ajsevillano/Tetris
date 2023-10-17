@@ -41,6 +41,7 @@ nextPieceCanvas.height =
 // Score
 const linesElement: any = document.querySelector('#lines');
 const levelElement: any = document.querySelector('.level');
+const scoreElement: any = document.querySelector('#score');
 
 // STATES
 let score = SCORE_CONFIG.INITIAL_SCORE;
@@ -70,7 +71,7 @@ const board = createBoardMatrix(
 
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
-  const result = incrementFallSpeed(score, level, fallSpeed, totalLinesRemoved);
+  const result = incrementFallSpeed(level, fallSpeed, totalLinesRemoved);
   level = result.level;
   fallSpeed = result.fallSpeed;
   // Render the next piece on the nextPieceCanvas
@@ -154,6 +155,7 @@ function renderTetrisBoard() {
 
   linesElement.innerText = totalLinesRemoved;
   levelElement.innerText = level;
+  scoreElement.innerText = score;
 }
 
 function solidifyPiece() {
@@ -235,5 +237,4 @@ addRkeyEventListener(() => {
 });
 
 // Execute the game for the first time
-
 gameLoop();
