@@ -18,7 +18,7 @@ const TETROMINOES = [
       [1, 1, 1],
     ],
     color: '#FFA500', // L-BLOCK (orange)
-    border: '#b36b00',
+    border: '#cc7a00',
   },
   {
     shape: [
@@ -26,7 +26,7 @@ const TETROMINOES = [
       [1, 1],
     ],
     color: '#fde100', //  O-BLOCK (yellow)
-    border: '#b39600',
+    border: '#d1b004',
   },
   {
     shape: [
@@ -34,7 +34,7 @@ const TETROMINOES = [
       [1, 1, 0],
     ],
     color: '#4eb748', // S-BLOCK (green)
-    border: '#2b6c3f',
+    border: '#378a50',
   },
   {
     shape: [
@@ -42,7 +42,7 @@ const TETROMINOES = [
       [1, 1, 1],
     ],
     color: '#922b8c', //  T-BLOCK (purple)
-    border: '#5f1b50',
+    border: '#6d1f5c',
   },
   {
     shape: [

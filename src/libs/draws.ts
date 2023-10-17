@@ -67,5 +67,54 @@ export function drawPieces({
   context.lineWidth = lineWidth;
   // Draw border for  pieces
   context.fillRect(x, y, width, height);
-  context.strokeRect(x, y, width, height);
+  context.strokeRect(
+    x + lineWidth,
+    y + lineWidth,
+    width - 2 * lineWidth,
+    height - 2 * lineWidth,
+  );
+}
+
+export function drawNextPieceOnCanvas(
+  piece: any,
+  nextPieceCanvas: any,
+  nextPieceContext: any,
+) {
+  drawBoard(nextPieceContext, nextPieceCanvas);
+
+  const scale = 25;
+  const pieceWidth = piece.shape[0].length;
+  const pieceHeight = piece.shape.length;
+
+  // Calculate the scaled width and height of the piece
+  const scaledWidth = pieceWidth * scale;
+  const scaledHeight = pieceHeight * scale;
+
+  // Ajusta el desplazamiento para centrar la pieza
+  const offsetX = (nextPieceCanvas.width - scaledWidth) / 2;
+  const offsetY = (nextPieceCanvas.height - scaledHeight) / 2;
+
+  // Draw the piece
+  piece.shape.forEach((row: any[], y: number) => {
+    row.forEach((value, x: number) => {
+      if (value) {
+        const xPos = x * scale + offsetX;
+        const yPos = y * scale + offsetY;
+        const pieceProps = {
+          value: piece.color,
+          border: piece.border,
+          x: xPos,
+          y: yPos,
+          context: nextPieceContext,
+          lineWidth: 1.5,
+          width: scale,
+          height: scale,
+        };
+        // Apply a shadow effect to the next piece
+        nextPieceContext.fillStyle = '#282828';
+        nextPieceContext.fillRect(xPos + 4, yPos + 4, 25, 25);
+        drawPieces(pieceProps);
+      }
+    });
+  });
 }

@@ -7,13 +7,13 @@ export default function checkCollision(piece: any, board: any) {
         const boardY = y + piece.position.y;
         const boardX = x + piece.position.x;
         if (
-          boardY >= CANVAS_CONFIG.BOARD_HEIGHT ||
+          boardY >= CANVAS_CONFIG.MAIN.BOARD_HEIGHT ||
           boardX < 0 ||
-          boardX >= CANVAS_CONFIG.BOARD_WIDTH ||
+          boardX >= CANVAS_CONFIG.MAIN.BOARD_WIDTH ||
           (boardY >= 0 &&
-            boardY < CANVAS_CONFIG.BOARD_HEIGHT &&
+            boardY < CANVAS_CONFIG.MAIN.BOARD_HEIGHT &&
             boardX >= 0 &&
-            boardX < CANVAS_CONFIG.BOARD_WIDTH &&
+            boardX < CANVAS_CONFIG.MAIN.BOARD_WIDTH &&
             board[boardY][boardX] !== 0)
         ) {
           return true;

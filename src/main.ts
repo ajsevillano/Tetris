@@ -1,7 +1,7 @@
 // Styles
 import './style.css';
 // Constants
-import { CANVAS_CONFIG, SPEED_CONFIG } from './const';
+import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 // Libs
 import { handlePause } from './libs/keyboardEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
@@ -20,30 +20,32 @@ import {
   drawPauseScreen,
   drawPieces,
   drawGameOverScreen,
+  drawNextPieceOnCanvas,
 } from './libs/draws';
 
 // Canvas
 const canvas: any = document.querySelector('canvas');
 const context = canvas.getContext('2d');
-canvas.width = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_WIDTH;
-canvas.height = CANVAS_CONFIG.BLOCK_SIZE * CANVAS_CONFIG.BOARD_HEIGHT;
-context.scale(CANVAS_CONFIG.BLOCK_SIZE, CANVAS_CONFIG.BLOCK_SIZE);
+canvas.width = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_WIDTH;
+canvas.height = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_HEIGHT;
+context.scale(CANVAS_CONFIG.MAIN.BLOCK_SIZE, CANVAS_CONFIG.MAIN.BLOCK_SIZE);
 
 // Next piece canvas
 const nextPieceCanvas: any = document.getElementById('nextPieceCanvas');
 const nextPieceContext = nextPieceCanvas.getContext('2d');
+nextPieceCanvas.width =
+  CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_WIDTH;
+nextPieceCanvas.height =
+  CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
 // Score
 const scoreElement: any = document.querySelector('span');
 const levelElement: any = document.querySelector('.level');
 
-nextPieceCanvas.width = 140;
-nextPieceCanvas.height = 140;
-
 // STATES
-let score = 0;
+let score = SCORE_CONFIG.INITIAL_SCORE;
 // Fall speed
-let level = 0;
+let level = SCORE_CONFIG.INITIAL_LEVEL;
 let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
 // Pause
 let isPaused = false;
@@ -58,64 +60,19 @@ let nextPiece = generateRandomPiece();
 
 // Board
 const board = createBoardMatrix(
-  CANVAS_CONFIG.BOARD_WIDTH,
-  CANVAS_CONFIG.BOARD_HEIGHT,
+  CANVAS_CONFIG.MAIN.BOARD_WIDTH,
+  CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
 
-// Función para mostrar la siguiente pieza en nextPieceCanvas
-function drawNextPieceOnCanvas(piece: any) {
-  nextPieceContext.fillStyle = '#0d0d0d';
-  // Fill the canvas with the background color
-  nextPieceContext.fillRect(
-    0,
-    0,
-    nextPieceCanvas.width,
-    nextPieceCanvas.height,
-  );
-
-  const scale = 24;
-
-  const pieceWidth = piece.shape[0].length;
-  const pieceHeight = piece.shape.length;
-
-  // Calcula el tamaño escalado de la pieza
-  const scaledWidth = pieceWidth * scale;
-  const scaledHeight = pieceHeight * scale;
-
-  // Ajusta el desplazamiento para centrar la pieza
-  const offsetX = (nextPieceCanvas.width - scaledWidth) / 2;
-  const offsetY = (nextPieceCanvas.height - scaledHeight) / 2;
-
-  // Dibuja la siguiente pieza escalada en el nextPieceCanvas
-  piece.shape.forEach((row: any[], y: number) => {
-    row.forEach((value, x: number) => {
-      if (value) {
-        const xPos = x * scale + offsetX;
-        const yPos = y * scale + offsetY;
-        const pieceProps = {
-          value: piece.color,
-          border: piece.border,
-          x: xPos,
-          y: yPos,
-          context: nextPieceContext,
-          lineWidth: 2,
-          width: scale,
-          height: scale,
-        };
-        // Apply a shadow effect to the next piece
-        nextPieceContext.strokeStyle = '#383838';
-        nextPieceContext.strokeRect(xPos + 5, yPos + 5, 21, 21);
-        drawPieces(pieceProps);
-      }
-    });
-  });
-}
+// Draw the next piece on the nextPieceCanvas
 
 function gameLoop(time = 0) {
   // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
   const result = incrementFallSpeed(score, level, fallSpeed);
   level = result.level;
   fallSpeed = result.fallSpeed;
+  // Render the next piece on the nextPieceCanvas
+  drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
   // Game over logic
   if (isGameOver) {
@@ -150,17 +107,37 @@ function renderTetrisBoard() {
   // Draw the board & it background grid
   drawBoard(context, canvas);
 
+  // Loop through piece and create the falling pieces
+  piece.shape.forEach((row: any[], y: number) => {
+    row.forEach((value, x) => {
+      if (value) {
+        const pieceProps = {
+          value: piece.color,
+          border: piece.border,
+          x: x + piece.position.x,
+          y: y + piece.position.y,
+          context: context,
+          lineWidth: 0.06,
+          width: 1,
+          height: 1,
+        };
+
+        drawPieces(pieceProps);
+      }
+    });
+  });
+
   // Loop through board and create pieces on the botton when solidified
   board.forEach((row, y) => {
-    row.forEach((value, x) => {
-      if (value !== 0) {
+    row.forEach((cell, x) => {
+      if (cell !== 0) {
         const pieceProps = {
-          value: value,
-          border: '#2e2e2e',
+          value: cell.color,
+          border: cell.border,
           x: x,
           y: y,
           context: context,
-          lineWidth: 0.04,
+          lineWidth: 0.06,
           width: 1,
           height: 1,
         };
@@ -172,33 +149,16 @@ function renderTetrisBoard() {
 
   scoreElement.innerText = score;
   levelElement.innerText = level;
-
-  // Loop through piece and create the falling pieces
-  piece.shape.forEach((row: any[], y: number) => {
-    row.forEach((value, x) => {
-      if (value) {
-        const pieceProps = {
-          value: piece.color,
-          border: '#2e2e2e',
-          x: x + piece.position.x,
-          y: y + piece.position.y,
-          context: context,
-          lineWidth: 0.04,
-          width: 1,
-          height: 1,
-        };
-
-        drawPieces(pieceProps);
-      }
-    });
-  });
 }
 
 function solidifyPiece() {
   piece.shape.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value === 1) {
-        board[y + piece.position.y][x + piece.position.x] = piece.color;
+        board[y + piece.position.y][x + piece.position.x] = {
+          color: piece.color,
+          border: piece.border,
+        };
       }
     });
   });
@@ -208,7 +168,7 @@ function solidifyPiece() {
   score = newScore;
 
   // reset position
-  piece.position.x = Math.floor(CANVAS_CONFIG.BOARD_WIDTH / 2);
+  piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
   piece.position.y = 0;
   // get random piece
   piece = nextPiece;
@@ -219,7 +179,7 @@ function solidifyPiece() {
   }
   // Cambiar a la siguiente pieza en nextPieceCanvas
   nextPiece = generateRandomPiece();
-  drawNextPieceOnCanvas(nextPiece);
+  drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 }
 
 function reStartGame() {
@@ -267,6 +227,7 @@ addEnterKeyEventListener(() => {
 addRkeyEventListener(() => {
   reStartGame();
 });
-drawNextPieceOnCanvas(nextPiece);
+
+// Execute the game for the first time
 
 gameLoop();

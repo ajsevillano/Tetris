@@ -1,7 +1,14 @@
 export const CANVAS_CONFIG = {
-  BLOCK_SIZE: 25,
-  BOARD_WIDTH: 14,
-  BOARD_HEIGHT: 30,
+  MAIN: {
+    BLOCK_SIZE: 25,
+    BOARD_WIDTH: 14,
+    BOARD_HEIGHT: 30,
+  },
+  NEXT_PIECE: {
+    BLOCK_SIZE: 25,
+    BOARD_WIDTH: 6,
+    BOARD_HEIGHT: 6,
+  },
 };
 
 export const EVENT_MOVEMENTS = {
@@ -15,6 +22,8 @@ export const EVENT_MOVEMENTS = {
 
 export const SCORE_CONFIG = {
   POINTS_NEXT_LEVEL: 100,
+  INITIAL_SCORE: 0,
+  INITIAL_LEVEL: 0,
   // FUTURE IMPLEMENTATION
   // ONE_ROW: 100,
   // TWO_ROWS: 300,
