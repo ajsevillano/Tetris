@@ -176,18 +176,29 @@ function solidifyPiece() {
   score = newScore.updatedScore;
   totalLinesRemoved = newScore.totalLinesRemoved;
 
+  // Game over
+  if (checkCollision(nextPiece, board)) {
+    isGameOver = true;
+    board.forEach((row) => row.fill(0));
+    return;
+  }
+
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
   piece.position.y = 0;
-  // get random piece
+
+  // Get the next piece
   piece = nextPiece;
-  // Game over
+
+  // Generate a new next piece
+  nextPiece = generateRandomPiece();
+
+  // Game over check for the new piece
   if (checkCollision(piece, board)) {
     isGameOver = true;
     board.forEach((row) => row.fill(0));
   }
-  // Cambiar a la siguiente pieza en nextPieceCanvas
-  nextPiece = generateRandomPiece();
+
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 }
 
