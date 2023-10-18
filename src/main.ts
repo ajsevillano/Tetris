@@ -23,7 +23,7 @@ import {
   drawNextPieceOnCanvas,
 } from './libs/draws';
 
-// Canvas
+// Main Canvas
 const canvas: any = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 canvas.width = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_WIDTH;
@@ -31,24 +31,25 @@ canvas.height = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_HEIGHT;
 context.scale(CANVAS_CONFIG.MAIN.BLOCK_SIZE, CANVAS_CONFIG.MAIN.BLOCK_SIZE);
 
 // Next piece canvas
-const nextPieceCanvas: any = document.getElementById('nextPieceCanvas');
+const nextPieceCanvas: any = document.querySelector('.next-piece-canvas');
 const nextPieceContext = nextPieceCanvas.getContext('2d');
 nextPieceCanvas.width =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_WIDTH;
 nextPieceCanvas.height =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
-// Score
+// Score,lines and level
 const linesElement: any = document.querySelector('#lines');
 const levelElement: any = document.querySelector('.level');
-const scoreElement: any = document.querySelector('#score');
+const scoreElement: any = document.querySelector('.score-box-text');
 
 // STATES
 let score = SCORE_CONFIG.INITIAL_SCORE;
+// Level
+let level = SCORE_CONFIG.INITIAL_LEVEL;
 // Total lines removed
 let totalLinesRemoved = 0;
-// Fall speed
-let level = SCORE_CONFIG.INITIAL_LEVEL;
+// Pieces fall speed
 let fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
 // Pause
 let isPaused = false;
@@ -84,7 +85,7 @@ function gameLoop(time = 0) {
     return;
   }
 
-  // Game pause logic
+  // If the game is not paused:
   if (!isPaused) {
     const deltaTime = time - lastTime;
     lastTime = time;

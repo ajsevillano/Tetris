@@ -8,63 +8,74 @@
   </head>
   <body>
     <div id="app">
-      <!-- Stats container -->
+      <!-- LEFT SIDE PANELS -->
       <div class="left-side-panels-container">
-        <div>
-          <p class="score-title">SCORE</p>
-          <div class="score-renderer-container"><p id="score"></p></div>
+        <!-- SCORE CONTAINER-->
+        <div id="score-container">
+          <p class="page-titles">SCORE</p>
+          <div class="data-box">
+            <p class="score-box-text"></p>
+          </div>
         </div>
-        <div id="container">
-          <p class="stats-title">STATS</p>
-          <div class="stats-container">
-            <div class="score-container">
-              <p>Lines</p>
+        <!-- END SCORE CONTAINER-->
+
+        <!-- STATS CONTAINER-->
+        <div id="stats-container">
+          <p class="page-titles">STATS</p>
+          <div class="data-box">
+            <div class="lines-container">
+              <p id="lines-sub-box-title">Lines</p>
               <span id="lines"></span>
             </div>
             <div class="level-container">
-              <p>Level</p>
+              <p id="level-sub-box-title">Level</p>
               <span class="level"></span>
             </div>
           </div>
         </div>
-        <div id="container">
-          <p class="controls-title">CONTROLS</p>
-          <div class="controls-container">
-            <div class="controls-container__left">
+        <!-- END STATS CONTAINER-->
+
+        <!-- CONTROLS CONTAINER-->
+        <div id="controls-container">
+          <p class="page-titles">CONTROLS</p>
+          <div class="data-box">
+            <div class="controls-box__left">
               <p>Left</p>
               <p>←</p>
             </div>
-            <div class="controls-container__right">
+            <div class="controls-box__right">
               <p>Right</p>
               <p>→</p>
             </div>
-            <div class="controls-container__down">
+            <div class="controls-box__down">
               <p>Down</p>
               <p>↓</p>
             </div>
-            <div class="controls-container__rotate">
+            <div class="controls-box__rotate">
               <p>Rotate</p>
               <p>↑</p>
             </div>
-            <div class="controls-container__pause">
+            <div class="controls-box__pause">
               <p>Pause</p>
               <p>P</p>
             </div>
-            <div class="controls-container__restart">
+            <div class="controls-box__restart">
               <p>ReStart</p>
               <p>R</p>
             </div>
           </div>
         </div>
       </div>
-      <!-- End Stats container -->
-      <!-- Main canvas -->
-      <canvas></canvas>
-      <!-- End of main canvas -->
+      <!-- END CONTROL CONTAINER-->
+      <!-- MAIN CANVAS -->
+      <canvas class="main-board-canvas"></canvas>
+      <!-- END MAIN CANVAS -->
+      <!-- NEXT PIECE CANVAS -->
       <div class="next-piece-canvas-container">
-        <p class="next-piece-title">NEXT</p>
-        <canvas id="nextPieceCanvas"></canvas>
+        <p class="page-titles">NEXT</p>
+        <canvas class="next-piece-canvas"></canvas>
       </div>
+      <!-- END NEXT PIECE CANVAS -->
     </div>
 
     <script type="module" src="/src/main.ts"></script>

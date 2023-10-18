@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   --background-color: linear-gradient(to bottom, #34495e, #8e44ad);
+  --font-family: 'Press Start 2P';
 }
 
 body {
@@ -22,6 +23,7 @@ body {
   height: 100vh;
   margin: 0;
   background: var(--background-color);
+  font-family: var(--font-family);
 }
 
 p,
@@ -36,31 +38,10 @@ h6 {
 
 #app {
   display: flex;
-  align-items: flex-start; /* Alinea al principio del eje vertical (alinea con canvas) */
+  align-items: flex-start;
 }
 
-.score-container,
-.level-container {
-  display: flex;
-  width: 80%;
-  justify-content: space-between;
-  margin: 1rem;
-  font-size: 1rem;
-  font-family: 'Press Start 2P';
-}
-
-canvas {
-  border: 1px solid #d6d6d6; /* Agrega un borde al canvas si lo deseas */
-}
-
-.next-piece-canvas-container {
-  margin-left: 3rem;
-}
-
-.next-piece-canvas-container canvas {
-  border: 1px solid #d6d6d6;
-  justify-content: space-between;
-}
+/* LEFT SIDE PANELS */
 
 .left-side-panels-container {
   display: flex;
@@ -69,50 +50,69 @@ canvas {
   margin-right: 3rem;
 }
 
-.stats-container,
-.controls-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #121212;
-  width: 200px;
-  border: 1px solid #d6d6d6;
-  margin-bottom: 3rem;
-  font-family: 'Press Start 2P';
-}
-
-.score-renderer-container {
-  text-align: right;
-  width: 200px;
-  background-color: #121212;
-  font-family: 'Press Start 2P';
-  border: 1px solid #d6d6d6;
-  margin-bottom: 3rem;
-}
-
-#score {
-  margin: 0.5rem;
-}
-
-.controls-title,
-.stats-title,
-.next-piece-title,
-.score-title {
-  font-family: 'Press Start 2P';
+.page-titles {
   text-align: center;
   margin-bottom: 1rem;
 }
 
-.controls-container__left,
-.controls-container__right,
-.controls-container__down,
-.controls-container__rotate,
-.controls-container__pause,
-.controls-container__restart {
+.data-box {
+  background-color: #121212;
+  width: 200px;
+  border: 3px solid #d6d6d6;
+  border-radius: 4px;
+  margin-bottom: 3rem;
+}
+
+/* SCORE CONTAINER */
+
+.score-box-text {
+  margin: 0.5rem;
+  text-align: right;
+}
+
+/* STATS CONTAINER */
+
+.lines-container,
+.level-container {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin: 1rem;
+  font-size: 1rem;
+}
+
+/* CONTROLS CONTAINER */
+
+.controls-box__left,
+.controls-box__right,
+.controls-box__down,
+.controls-box__rotate,
+.controls-box__pause,
+.controls-box__restart {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   margin: 1.2rem;
   width: 80%;
+}
+
+/* MAIN CANVAS */
+
+.main-board-canvas {
+  border: 3px solid #d6d6d6;
+  border-radius: 4px;
+}
+
+/* RIGHT SIDE PANELS */
+
+/* NEXT PIECE CANVAS */
+.next-piece-canvas-container {
+  margin-left: 3rem;
+}
+
+.next-piece-canvas {
+  justify-content: space-between;
+  border: 3px solid #d6d6d6;
+  border-radius: 4px;
 }
