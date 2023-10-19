@@ -17,9 +17,7 @@ import {
   addRkeyEventListener,
 } from './eventListeners';
 import {
-  drawBoard,
   drawPauseScreen,
-  drawPieces,
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
@@ -40,9 +38,10 @@ nextPieceCanvas.height =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
 // Score,lines and level
-const linesElement: any = document.querySelector('#lines');
-const levelElement: any = document.querySelector('.level');
-const scoreElement: any = document.querySelector('.score-box-text');
+const linesElement: HTMLElement | null = document.querySelector('#lines');
+const levelElement: HTMLElement | null = document.querySelector('.level');
+const scoreElement: HTMLElement | null =
+  document.querySelector('.score-box-text');
 
 // STATES
 let score = SCORE_CONFIG.INITIAL_SCORE;

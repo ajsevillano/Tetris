@@ -8,9 +8,9 @@ export default function renderTetrisBoard(
   totalLinesRemoved: any,
   level: any,
   score: any,
-  linesElement: any,
-  levelElement: any,
-  scoreElement: any,
+  linesElement: HTMLElement | null,
+  levelElement: HTMLElement | null,
+  scoreElement: HTMLElement | null,
 ) {
   // Draw the board & it background grid
   drawBoard(context, canvas);
@@ -55,7 +55,7 @@ export default function renderTetrisBoard(
     });
   });
 
-  linesElement.innerText = totalLinesRemoved;
-  levelElement.innerText = level;
-  scoreElement.innerText = score;
+  if (scoreElement) scoreElement.innerText = score;
+  if (linesElement) linesElement.innerText = totalLinesRemoved;
+  if (levelElement) levelElement.innerText = level;
 }
