@@ -5,8 +5,6 @@ import './style.css';
 // Constants
 import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 // Libs
-// import { handlePause } from './libs/keyboardEvents';
-import { EVENT_MOVEMENTS } from './const';
 import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
@@ -19,7 +17,12 @@ import {
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
-import { handleEnterKey, handleRkey } from './libs/handleKeyEvents';
+import {
+  handleEnterKey,
+  handleRkey,
+  handlePause,
+  handleArrowKeys,
+} from './libs/handleKeyEvents';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -185,70 +188,19 @@ function reStartGame() {
 
 // EVENT LISTENERS
 
-//
-function handleKeyDown(event: KeyboardEvent) {
-  if (event.key === EVENT_MOVEMENTS.LEFT) {
-    piece.position.x--;
-    if (checkCollision(piece, board)) {
-      piece.position.x++;
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.RIGHT) {
-    piece.position.x++;
-    if (checkCollision(piece, board)) {
-      piece.position.x--;
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.DOWN) {
-    piece.position.y++;
-    if (checkCollision(piece, board)) {
-      piece.position.y--;
-      solidifyPiece();
-
-      piece = generateRandomPiece();
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.UP) {
-    if (event.key === EVENT_MOVEMENTS.UP) {
-      const rotated = [];
-
-      for (let i = 0; i < piece.shape[0].length; i++) {
-        const row = [];
-
-        for (let j = piece.shape.length - 1; j >= 0; j--) {
-          row.push(piece.shape[j][i]);
-        }
-        rotated.push(row);
-      }
-      const previousShape = piece.shape;
-      piece.shape = rotated;
-      if (checkCollision(piece, board)) {
-        piece.shape = previousShape;
-      }
-    }
-  }
-}
-
-function handlePause(event: KeyboardEvent) {
-  if (event.key === 'p' || event.key === 'P') {
-    isPaused = !isPaused;
-    if (isPaused) {
-      document.removeEventListener('keydown', handleKeyDown);
-    } else {
-      document.addEventListener('keydown', handleKeyDown);
-    }
-  }
-}
-
 // Event listeners
+document.addEventListener('keydown', (event) => {
+  if (isPaused) return;
+  piece = handleArrowKeys(event, piece, board, solidifyPiece);
+});
+document.addEventListener(
+  'keydown',
+  (event) => (isPaused = handlePause(event, isPaused)),
+);
 document.addEventListener('keydown', (event) => handleRkey(event, reStartGame));
-
 document.addEventListener('keydown', (event) =>
   handleEnterKey(event, isGameOver, reStartGame),
 );
-
-document.addEventListener('keydown', handleKeyDown);
-document.addEventListener('keydown', handlePause);
 
 // Execute the game for the first time
 gameLoop();
