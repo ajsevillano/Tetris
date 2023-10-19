@@ -1,3 +1,5 @@
+// PRIMER CAMBIO
+
 // Styles
 import './style.css';
 // Constants
@@ -74,40 +76,42 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
 
+function handleCollisions(time: number) {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+  dropCounter += deltaTime;
+  if (dropCounter > fallSpeed) {
+    piece.position.y++;
+    if (checkCollision(piece, board)) {
+      piece.position.y--;
+      solidifyPiece();
+      const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
+      score = newScore.updatedScore;
+      totalLinesRemoved = newScore.totalLinesRemoved;
+      piece = generateRandomPiece();
+    }
+    dropCounter = 0;
+  }
+}
+
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   const result = shouldIncreaseFallSpeed(level, fallSpeed, totalLinesRemoved);
   level = result.level;
   fallSpeed = result.fallSpeed;
 
-  // Render the next piece on the nextPieceCanvas
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
-  // Game over logic
   if (isGameOver) {
     drawGameOverScreen(context);
-    // Stop the game loop
     return;
   }
 
-  // If the game is not paused:
-  if (!isPaused) {
-    const deltaTime = time - lastTime;
-    lastTime = time;
-    dropCounter += deltaTime;
-    if (dropCounter > fallSpeed) {
-      piece.position.y++;
-      if (checkCollision(piece, board)) {
-        piece.position.y--;
-        solidifyPiece();
-        const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
-        score = newScore.updatedScore;
-        totalLinesRemoved = newScore.totalLinesRemoved;
+  if (isPaused) {
+    drawPauseScreen(context);
+  }
 
-        piece = generateRandomPiece();
-      }
-      dropCounter = 0;
-    }
+  if (!isPaused) {
     let renderBoardProps = {
       context,
       canvas,
@@ -121,9 +125,10 @@ function gameLoop(time = 0) {
       scoreElement,
     };
     renderBoard(renderBoardProps);
-  } else {
-    drawPauseScreen(context);
   }
+
+  handleCollisions(time);
+
   window.requestAnimationFrame(gameLoop);
 }
 
