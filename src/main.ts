@@ -1,28 +1,25 @@
-// PRIMER CAMBIO
+// SEGUNDO CAMBIO: fix de keyboard handler
 
 // Styles
 import './style.css';
 // Constants
 import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 // Libs
-import { handlePause } from './libs/keyboardEvents';
+// import { handlePause } from './libs/keyboardEvents';
+import { EVENT_MOVEMENTS } from './const';
 import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
 import renderBoard from './libs/renders/renderBoard';
-import {
-  addArrowKeyEventListener,
-  addEnterKeyEventListener,
-  addPauseKeyEventListener,
-  addRkeyEventListener,
-} from './eventListeners';
+
 import {
   drawPauseScreen,
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
+import { handleEnterKey, handleRkey } from './libs/handleKeyEvents';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -76,42 +73,40 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
 
-function handleCollisions(time: number) {
-  const deltaTime = time - lastTime;
-  lastTime = time;
-  dropCounter += deltaTime;
-  if (dropCounter > fallSpeed) {
-    piece.position.y++;
-    if (checkCollision(piece, board)) {
-      piece.position.y--;
-      solidifyPiece();
-      const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
-      score = newScore.updatedScore;
-      totalLinesRemoved = newScore.totalLinesRemoved;
-      piece = generateRandomPiece();
-    }
-    dropCounter = 0;
-  }
-}
-
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   const result = shouldIncreaseFallSpeed(level, fallSpeed, totalLinesRemoved);
   level = result.level;
   fallSpeed = result.fallSpeed;
 
+  // Render the next piece on the nextPieceCanvas
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
+  // Game over logic
   if (isGameOver) {
     drawGameOverScreen(context);
+    // Stop the game loop
     return;
   }
 
-  if (isPaused) {
-    drawPauseScreen(context);
-  }
-
+  // If the game is not paused:
   if (!isPaused) {
+    const deltaTime = time - lastTime;
+    lastTime = time;
+    dropCounter += deltaTime;
+    if (dropCounter > fallSpeed) {
+      piece.position.y++;
+      if (checkCollision(piece, board)) {
+        piece.position.y--;
+        solidifyPiece();
+        const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
+        score = newScore.updatedScore;
+        totalLinesRemoved = newScore.totalLinesRemoved;
+
+        piece = generateRandomPiece();
+      }
+      dropCounter = 0;
+    }
     let renderBoardProps = {
       context,
       canvas,
@@ -125,10 +120,9 @@ function gameLoop(time = 0) {
       scoreElement,
     };
     renderBoard(renderBoardProps);
+  } else {
+    drawPauseScreen(context);
   }
-
-  handleCollisions(time);
-
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -191,35 +185,70 @@ function reStartGame() {
 
 // EVENT LISTENERS
 
-// Getters
-const getPiece = () => piece;
-const getBoard = () => board;
+//
+function handleKeyDown(event: KeyboardEvent) {
+  if (event.key === EVENT_MOVEMENTS.LEFT) {
+    piece.position.x--;
+    if (checkCollision(piece, board)) {
+      piece.position.x++;
+    }
+  }
+  if (event.key === EVENT_MOVEMENTS.RIGHT) {
+    piece.position.x++;
+    if (checkCollision(piece, board)) {
+      piece.position.x--;
+    }
+  }
+  if (event.key === EVENT_MOVEMENTS.DOWN) {
+    piece.position.y++;
+    if (checkCollision(piece, board)) {
+      piece.position.y--;
+      solidifyPiece();
 
-// Arrow key event listeners
-addArrowKeyEventListener(
-  isPaused,
-  getPiece,
-  getBoard,
-  solidifyPiece,
-  generateRandomPiece,
+      piece = generateRandomPiece();
+    }
+  }
+  if (event.key === EVENT_MOVEMENTS.UP) {
+    if (event.key === EVENT_MOVEMENTS.UP) {
+      const rotated = [];
+
+      for (let i = 0; i < piece.shape[0].length; i++) {
+        const row = [];
+
+        for (let j = piece.shape.length - 1; j >= 0; j--) {
+          row.push(piece.shape[j][i]);
+        }
+        rotated.push(row);
+      }
+      const previousShape = piece.shape;
+      piece.shape = rotated;
+      if (checkCollision(piece, board)) {
+        piece.shape = previousShape;
+      }
+    }
+  }
+}
+
+function handlePause(event: KeyboardEvent) {
+  if (event.key === 'p' || event.key === 'P') {
+    isPaused = !isPaused;
+    if (isPaused) {
+      document.removeEventListener('keydown', handleKeyDown);
+    } else {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+  }
+}
+
+// Event listeners
+document.addEventListener('keydown', (event) => handleRkey(event, reStartGame));
+
+document.addEventListener('keydown', (event) =>
+  handleEnterKey(event, isGameOver, reStartGame),
 );
 
-// Pause key event listener
-addPauseKeyEventListener((event: any) => {
-  isPaused = handlePause(event, isPaused);
-});
-
-// Enter key event listener
-addEnterKeyEventListener(() => {
-  if (isGameOver) {
-    reStartGame();
-  }
-});
-
-// R key event listener
-addRkeyEventListener(() => {
-  reStartGame();
-});
+document.addEventListener('keydown', handleKeyDown);
+document.addEventListener('keydown', handlePause);
 
 // Execute the game for the first time
 gameLoop();
