@@ -6,10 +6,10 @@ import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 import { handlePause } from './libs/keyboardEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
-import incrementFallSpeed from './libs/incrementFallSpeed';
+import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
-import renderTetrisBoard from './libs/renderTetrisBoard';
+import renderBoard from './libs/renders/renderBoard';
 import {
   addArrowKeyEventListener,
   addEnterKeyEventListener,
@@ -23,11 +23,17 @@ import {
 } from './libs/draws';
 
 // Main Canvas
-const canvas: any = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-canvas.width = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_WIDTH;
-canvas.height = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_HEIGHT;
-context.scale(CANVAS_CONFIG.MAIN.BLOCK_SIZE, CANVAS_CONFIG.MAIN.BLOCK_SIZE);
+const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
+const context = canvas?.getContext('2d');
+
+if (canvas) {
+  canvas.width = CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_WIDTH;
+  canvas.height =
+    CANVAS_CONFIG.MAIN.BLOCK_SIZE * CANVAS_CONFIG.MAIN.BOARD_HEIGHT;
+}
+
+if (context)
+  context.scale(CANVAS_CONFIG.MAIN.BLOCK_SIZE, CANVAS_CONFIG.MAIN.BLOCK_SIZE);
 
 // Next piece canvas
 const nextPieceCanvas: any = document.querySelector('.next-piece-canvas');
@@ -37,7 +43,7 @@ nextPieceCanvas.width =
 nextPieceCanvas.height =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
-// Score,lines and level
+// Score,lines and level elements
 const linesElement: HTMLElement | null = document.querySelector('#lines');
 const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
@@ -68,13 +74,12 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
 
-// Draw the next piece on the nextPieceCanvas
-
 function gameLoop(time = 0) {
-  // Increase the piece speed of descent according to the constant POINTS_NEXT_LEVEL
-  const result = incrementFallSpeed(level, fallSpeed, totalLinesRemoved);
+  // Check if the fall speed should be increased
+  const result = shouldIncreaseFallSpeed(level, fallSpeed, totalLinesRemoved);
   level = result.level;
   fallSpeed = result.fallSpeed;
+
   // Render the next piece on the nextPieceCanvas
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
@@ -103,7 +108,7 @@ function gameLoop(time = 0) {
       }
       dropCounter = 0;
     }
-    renderTetrisBoard(
+    let renderBoardProps = {
       context,
       canvas,
       piece,
@@ -114,7 +119,8 @@ function gameLoop(time = 0) {
       linesElement,
       levelElement,
       scoreElement,
-    );
+    };
+    renderBoard(renderBoardProps);
   } else {
     drawPauseScreen(context);
   }

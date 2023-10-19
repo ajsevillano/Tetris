@@ -1,8 +1,8 @@
 import { SCORE_CONFIG, SPEED_CONFIG } from '../const';
 
-export default function incrementFallSpeed(
-  level: any,
-  fallSpeed: any,
+export default function shouldIncreaseFallSpeed(
+  level: number,
+  fallSpeed: number,
   totalLinesRemoved: number,
 ) {
   let updatedLevel = level;
