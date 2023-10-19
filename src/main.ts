@@ -9,6 +9,7 @@ import checkCollision from './libs/checkCollisions';
 import incrementFallSpeed from './libs/incrementFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
+import renderTetrisBoard from './libs/renderTetrisBoard';
 import {
   addArrowKeyEventListener,
   addEnterKeyEventListener,
@@ -103,60 +104,22 @@ function gameLoop(time = 0) {
       }
       dropCounter = 0;
     }
-    renderTetrisBoard();
+    renderTetrisBoard(
+      context,
+      canvas,
+      piece,
+      board,
+      totalLinesRemoved,
+      level,
+      score,
+      linesElement,
+      levelElement,
+      scoreElement,
+    );
   } else {
     drawPauseScreen(context);
   }
   window.requestAnimationFrame(gameLoop);
-}
-
-function renderTetrisBoard() {
-  // Draw the board & it background grid
-  drawBoard(context, canvas);
-
-  // Loop through piece and create the falling pieces
-  piece.shape.forEach((row: any[], y: number) => {
-    row.forEach((value, x) => {
-      if (value) {
-        const pieceProps = {
-          value: piece.color,
-          border: piece.border,
-          x: x + piece.position.x,
-          y: y + piece.position.y,
-          context: context,
-          lineWidth: 0.06,
-          width: 1,
-          height: 1,
-        };
-
-        drawPieces(pieceProps);
-      }
-    });
-  });
-
-  // Loop through board and create pieces on the botton when solidified
-  board.forEach((row, y) => {
-    row.forEach((cell, x) => {
-      if (cell !== 0) {
-        const pieceProps = {
-          value: cell.color,
-          border: cell.border,
-          x: x,
-          y: y,
-          context: context,
-          lineWidth: 0.06,
-          width: 1,
-          height: 1,
-        };
-
-        drawPieces(pieceProps);
-      }
-    });
-  });
-
-  linesElement.innerText = totalLinesRemoved;
-  levelElement.innerText = level;
-  scoreElement.innerText = score;
 }
 
 function solidifyPiece() {

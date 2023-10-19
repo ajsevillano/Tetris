@@ -13,6 +13,7 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
   --background-color: linear-gradient(to bottom, #34495e, #8e44ad);
+  --canvas-border: #d6d6d6;
   --font-family: 'Press Start 2P';
 }
 
@@ -58,7 +59,7 @@ h6 {
 .data-box {
   background-color: #121212;
   width: 200px;
-  border: 3px solid #d6d6d6;
+  border: 3px solid var(--canvas-border);
   border-radius: 4px;
   margin-bottom: 3rem;
 }
@@ -100,7 +101,7 @@ h6 {
 /* MAIN CANVAS */
 
 .main-board-canvas {
-  border: 3px solid #d6d6d6;
+  border: 3px solid var(--canvas-border);
   border-radius: 4px;
 }
 
@@ -113,6 +114,6 @@ h6 {
 
 .next-piece-canvas {
   justify-content: space-between;
-  border: 3px solid #d6d6d6;
+  border: 3px solid var(--canvas-border);
   border-radius: 4px;
 }
