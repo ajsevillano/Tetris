@@ -1,5 +1,5 @@
-// Global states
-import { globalVariables } from './globalStates';
+// Global state
+import { state } from './globalStates';
 // Styles
 import './style.css';
 // Constants
@@ -68,18 +68,18 @@ function gameLoop(time = 0) {
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
-  if (globalVariables.isGameOver) {
+  if (state.isGameOver) {
     drawGameOverScreen(context);
     return;
   }
 
-  if (globalVariables.isPaused) {
+  if (state.isPaused) {
     drawPauseScreen(context);
     window.requestAnimationFrame(gameLoop);
     return;
   }
 
-  if (!globalVariables.isPaused) {
+  if (!state.isPaused) {
     let renderBoardProps: any = {
       context,
       canvas,
@@ -105,10 +105,9 @@ function gameLoop(time = 0) {
 }
 
 // EVENT LISTENERS
-
 // Arrow key event listeners
 document.addEventListener('keydown', (event) => {
-  if (globalVariables.isPaused) return;
+  if (state.isPaused) return;
   handleArrowKeys(event, piece, board, () => {
     const updatePiece = solidifyPiece({
       piece,
@@ -124,13 +123,12 @@ document.addEventListener('keydown', (event) => {
 // Pause key event listener
 document.addEventListener(
   'keydown',
-  (event) =>
-    (globalVariables.isPaused = handlePause(event, globalVariables.isPaused)),
+  (event) => (state.isPaused = handlePause(event, state.isPaused)),
 );
 
 // Enter key event listener
 document.addEventListener('keydown', (event) =>
-  handleEnterKey(event, globalVariables.isGameOver, () =>
+  handleEnterKey(event, state.isGameOver, () =>
     resetGame(board, piece, gameLoop),
   ),
 );

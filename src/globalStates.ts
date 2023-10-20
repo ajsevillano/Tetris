@@ -1,6 +1,6 @@
 import { SCORE_CONFIG, SPEED_CONFIG } from './const';
 
-export const globalVariables = {
+export const state = {
   score: SCORE_CONFIG.INITIAL_SCORE,
   level: SCORE_CONFIG.INITIAL_LEVEL,
   totalLinesRemoved: 0,
