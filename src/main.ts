@@ -150,13 +150,6 @@ function solidifyPiece() {
   score = newScore.updatedScore;
   totalLinesRemoved = newScore.totalLinesRemoved;
 
-  // Game over
-  // if (checkCollision(nextPiece, board)) {
-  //   isGameOver = true;
-  //   board.forEach((row) => row.fill(0));
-  //   return;
-  // }
-
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
   piece.position.y = 0;
@@ -181,6 +174,7 @@ function reStartGame() {
   board.forEach((row) => row.fill(0));
   score = 0;
   level = 0;
+  totalLinesRemoved = 0;
   fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
   // Set the initial position of the piece
   piece.position.x = 5;
