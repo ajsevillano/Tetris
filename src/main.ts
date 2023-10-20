@@ -76,6 +76,24 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
 
+function handleCollisions(time: number) {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+  dropCounter += deltaTime;
+  if (dropCounter > fallSpeed) {
+    piece.position.y++;
+    if (checkCollision(piece, board)) {
+      piece.position.y--;
+      solidifyPiece();
+      const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
+      score = newScore.updatedScore;
+      totalLinesRemoved = newScore.totalLinesRemoved;
+      piece = generateRandomPiece();
+    }
+    dropCounter = 0;
+  }
+}
+
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   const result = shouldIncreaseFallSpeed(level, fallSpeed, totalLinesRemoved);
@@ -92,24 +110,12 @@ function gameLoop(time = 0) {
     return;
   }
 
+  if (isPaused) {
+    drawPauseScreen(context);
+  }
+
   // If the game is not paused:
   if (!isPaused) {
-    const deltaTime = time - lastTime;
-    lastTime = time;
-    dropCounter += deltaTime;
-    if (dropCounter > fallSpeed) {
-      piece.position.y++;
-      if (checkCollision(piece, board)) {
-        piece.position.y--;
-        solidifyPiece();
-        const newScore = checkAndRemoveRows(board, score, totalLinesRemoved);
-        score = newScore.updatedScore;
-        totalLinesRemoved = newScore.totalLinesRemoved;
-
-        piece = generateRandomPiece();
-      }
-      dropCounter = 0;
-    }
     let renderBoardProps = {
       context,
       canvas,
@@ -123,9 +129,9 @@ function gameLoop(time = 0) {
       scoreElement,
     };
     renderBoard(renderBoardProps);
-  } else {
-    drawPauseScreen(context);
   }
+
+  handleCollisions(time);
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -177,6 +183,7 @@ function reStartGame() {
   board.forEach((row) => row.fill(0));
   score = 0;
   level = 0;
+  totalLinesRemoved = 0;
   fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
   // Set the initial position of the piece
   piece.position.x = 5;
