@@ -3,7 +3,7 @@ import { globalVariables } from './globalStates';
 // Styles
 import './style.css';
 // Constants
-import { CANVAS_CONFIG, SPEED_CONFIG } from './const';
+import { CANVAS_CONFIG } from './const';
 // Libs
 import {
   handlePause,
@@ -22,6 +22,7 @@ import {
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
+import resetGame from './libs/resetGame';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -72,13 +73,7 @@ function handleCollisions(time: number) {
     if (checkCollision(piece, board)) {
       piece.position.y--;
       solidifyPiece();
-      const newScore = checkAndRemoveRows(
-        board,
-        globalVariables.score,
-        globalVariables.totalLinesRemoved,
-      );
-      globalVariables.score = newScore.updatedScore;
-      globalVariables.totalLinesRemoved = newScore.totalLinesRemoved;
+      checkAndRemoveRows(board);
       piece = generateRandomPiece();
     }
     dropCounter = 0;
@@ -88,7 +83,6 @@ function handleCollisions(time: number) {
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   shouldIncreaseFallSpeed();
-  console.log(globalVariables.fallSpeed);
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
   if (globalVariables.isGameOver) {
@@ -108,9 +102,6 @@ function gameLoop(time = 0) {
       canvas,
       piece,
       board,
-      totalLinesRemoved: globalVariables.totalLinesRemoved,
-      level: globalVariables.level,
-      score: globalVariables.score,
       linesElement,
       levelElement,
       scoreElement,
@@ -136,13 +127,7 @@ function solidifyPiece() {
   });
 
   // Check and remove rows before resetting the position
-  const newScore = checkAndRemoveRows(
-    board,
-    globalVariables.score,
-    globalVariables.totalLinesRemoved,
-  );
-  globalVariables.score = newScore.updatedScore;
-  globalVariables.totalLinesRemoved = newScore.totalLinesRemoved;
+  checkAndRemoveRows(board);
 
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
@@ -163,20 +148,6 @@ function solidifyPiece() {
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 }
 
-function resetGame() {
-  // Empty the board & reset score
-  board.forEach((row) => row.fill(0));
-  globalVariables.score = 0;
-  globalVariables.level = 0;
-  globalVariables.totalLinesRemoved = 0;
-  globalVariables.fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
-  // Set the initial position of the piece
-  piece.position.x = 5;
-  piece.position.y = -1;
-  globalVariables.isGameOver = false;
-  gameLoop();
-}
-
 // EVENT LISTENERS
 
 // Arrow key event listeners
@@ -193,11 +164,15 @@ document.addEventListener(
 
 // Enter key event listener
 document.addEventListener('keydown', (event) =>
-  handleEnterKey(event, globalVariables.isGameOver, resetGame),
+  handleEnterKey(event, globalVariables.isGameOver, () =>
+    resetGame(board, piece, gameLoop),
+  ),
 );
 
 // R key event listener
-document.addEventListener('keydown', (event) => handleRkey(event, resetGame));
+document.addEventListener('keydown', (event) =>
+  handleRkey(event, () => resetGame(board, piece, gameLoop)),
+);
 
 // Execute the game for the first time
 gameLoop();

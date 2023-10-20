@@ -3,15 +3,13 @@ import updateElementText from '../../helpers/validators';
 import renderFallingPieces from './renderFallingPieces';
 import renderSolidifiedPieces from './renderSolidifiedPieces';
 import { RenderBoardProps } from './types';
+import { globalVariables } from '../../globalStates';
 
 export default function renderBoard({
   context,
   canvas,
   piece,
   board,
-  totalLinesRemoved,
-  level,
-  score,
   linesElement,
   levelElement,
   scoreElement,
@@ -20,7 +18,7 @@ export default function renderBoard({
   renderFallingPieces(piece, context);
   renderSolidifiedPieces(board, context);
   // Update states
-  updateElementText(scoreElement, score);
-  updateElementText(levelElement, level);
-  updateElementText(linesElement, totalLinesRemoved);
+  updateElementText(scoreElement, globalVariables.score);
+  updateElementText(levelElement, globalVariables.level);
+  updateElementText(linesElement, globalVariables.totalLinesRemoved);
 }

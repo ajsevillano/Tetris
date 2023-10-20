@@ -1,13 +1,11 @@
 import { CANVAS_CONFIG, SCORE_CONFIG } from '../const';
+import { globalVariables } from '../globalStates';
 
-export default function checkAndRemoveRows(
-  board: any,
-  score: any,
-  totalLinesRemoved: number,
-) {
+export default function checkAndRemoveRows(board: any) {
   const fullRows = [];
   let linesRemoved = 0;
-  let updatedScore = score;
+
+  globalVariables.score;
 
   for (let y = 0; y < CANVAS_CONFIG.MAIN.BOARD_HEIGHT; y++) {
     if (board[y].every((value: any) => value !== 0)) {
@@ -22,24 +20,22 @@ export default function checkAndRemoveRows(
     linesRemoved++;
   });
 
-  totalLinesRemoved += linesRemoved;
+  globalVariables.totalLinesRemoved += linesRemoved;
 
   switch (linesRemoved) {
     case 1:
-      updatedScore += SCORE_CONFIG.ONE_ROW;
+      globalVariables.score += SCORE_CONFIG.ONE_ROW;
       break;
     case 2:
-      updatedScore += SCORE_CONFIG.TWO_ROWS;
+      globalVariables.score += SCORE_CONFIG.TWO_ROWS;
       break;
     case 3:
-      updatedScore += SCORE_CONFIG.THREE_ROWS;
+      globalVariables.score += SCORE_CONFIG.THREE_ROWS;
       break;
     case 4:
-      updatedScore += SCORE_CONFIG.FOUR_ROWS;
+      globalVariables.score += SCORE_CONFIG.FOUR_ROWS;
       break;
     default:
       break;
   }
-
-  return { updatedScore, totalLinesRemoved };
 }
