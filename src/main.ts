@@ -1,28 +1,27 @@
-// SEGUNDO CAMBIO: fix de keyboard handler
+// PRIMER CAMBIO
 
 // Styles
 import './style.css';
 // Constants
 import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 // Libs
+import {
+  handlePause,
+  handleEnterKey,
+  handleRkey,
+  handleArrowKeys,
+} from './libs/handleKeyEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
 import checkCollision from './libs/checkCollisions';
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
 import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
 import renderBoard from './libs/renders/renderBoard';
-
 import {
   drawPauseScreen,
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
-import {
-  handleEnterKey,
-  handleRkey,
-  handlePause,
-  handleArrowKeys,
-} from './libs/handleKeyEvents';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -100,21 +99,19 @@ function gameLoop(time = 0) {
   level = result.level;
   fallSpeed = result.fallSpeed;
 
-  // Render the next piece on the nextPieceCanvas
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
 
-  // Game over logic
   if (isGameOver) {
     drawGameOverScreen(context);
-    // Stop the game loop
     return;
   }
 
   if (isPaused) {
     drawPauseScreen(context);
+    window.requestAnimationFrame(gameLoop);
+    return;
   }
 
-  // If the game is not paused:
   if (!isPaused) {
     let renderBoardProps = {
       context,
@@ -132,6 +129,7 @@ function gameLoop(time = 0) {
   }
 
   handleCollisions(time);
+
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -153,11 +151,11 @@ function solidifyPiece() {
   totalLinesRemoved = newScore.totalLinesRemoved;
 
   // Game over
-  if (checkCollision(nextPiece, board)) {
-    isGameOver = true;
-    board.forEach((row) => row.fill(0));
-    return;
-  }
+  // if (checkCollision(nextPiece, board)) {
+  //   isGameOver = true;
+  //   board.forEach((row) => row.fill(0));
+  //   return;
+  // }
 
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
@@ -183,7 +181,6 @@ function reStartGame() {
   board.forEach((row) => row.fill(0));
   score = 0;
   level = 0;
-  totalLinesRemoved = 0;
   fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
   // Set the initial position of the piece
   piece.position.x = 5;
@@ -195,19 +192,24 @@ function reStartGame() {
 
 // EVENT LISTENERS
 
-// Event listeners
+// Arrow key event listeners
 document.addEventListener('keydown', (event) => {
   if (isPaused) return;
-  piece = handleArrowKeys(event, piece, board, solidifyPiece);
+  handleArrowKeys(event, piece, board, solidifyPiece);
 });
+// Pause key event listener
 document.addEventListener(
   'keydown',
   (event) => (isPaused = handlePause(event, isPaused)),
 );
-document.addEventListener('keydown', (event) => handleRkey(event, reStartGame));
+
+// Enter key event listener
 document.addEventListener('keydown', (event) =>
   handleEnterKey(event, isGameOver, reStartGame),
 );
+
+// R key event listener
+document.addEventListener('keydown', (event) => handleRkey(event, reStartGame));
 
 // Execute the game for the first time
 gameLoop();
