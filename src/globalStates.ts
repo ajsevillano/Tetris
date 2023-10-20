@@ -7,4 +7,6 @@ export const globalVariables = {
   fallSpeed: SPEED_CONFIG.DEFAULT_FALL_SPEED,
   isPaused: false,
   isGameOver: false,
+  dropCounter: 0,
+  lastTime: 0,
 };

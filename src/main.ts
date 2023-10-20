@@ -1,5 +1,5 @@
+// Global states
 import { globalVariables } from './globalStates';
-
 // Styles
 import './style.css';
 // Constants
@@ -12,9 +12,7 @@ import {
   handleArrowKeys,
 } from './libs/handleKeyEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
-import checkCollision from './libs/checkCollisions';
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
-import checkAndRemoveRows from './libs/removeRows';
 import createBoardMatrix from './libs/createBoardMatrix';
 import renderBoard from './libs/renders/renderBoard';
 import {
@@ -24,6 +22,7 @@ import {
 } from './libs/draws';
 import resetGame from './libs/resetGame';
 import solidifyPiece from './libs/solidifyPiece';
+import handleCollisions from './libs/handleCollisions';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -53,8 +52,7 @@ const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
 // Drop counter
-let dropCounter = 0;
-let lastTime = 0;
+
 // Pieces
 let piece = generateRandomPiece();
 let nextPiece = generateRandomPiece();
@@ -64,30 +62,6 @@ const board = createBoardMatrix(
   CANVAS_CONFIG.MAIN.BOARD_WIDTH,
   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
 );
-
-function handleCollisions(time: number) {
-  const deltaTime = time - lastTime;
-  lastTime = time;
-  dropCounter += deltaTime;
-  if (dropCounter > globalVariables.fallSpeed) {
-    piece.position.y++;
-    if (checkCollision(piece, board)) {
-      piece.position.y--;
-      const updatePiece = solidifyPiece({
-        piece,
-        board,
-        nextPiece,
-        nextPieceCanvas,
-        nextPieceContext,
-      });
-      piece = updatePiece.piece;
-      nextPiece = updatePiece.nextPiece;
-      checkAndRemoveRows(board);
-      piece = generateRandomPiece();
-    }
-    dropCounter = 0;
-  }
-}
 
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
@@ -118,7 +92,14 @@ function gameLoop(time = 0) {
     renderBoard(renderBoardProps);
   }
 
-  handleCollisions(time);
+  handleCollisions({
+    time,
+    piece,
+    board,
+    nextPiece,
+    nextPieceCanvas,
+    nextPieceContext,
+  });
 
   window.requestAnimationFrame(gameLoop);
 }
