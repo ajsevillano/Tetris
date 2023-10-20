@@ -23,6 +23,7 @@ import {
   drawNextPieceOnCanvas,
 } from './libs/draws';
 import resetGame from './libs/resetGame';
+import solidifyPiece from './libs/solidifyPiece';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -72,7 +73,15 @@ function handleCollisions(time: number) {
     piece.position.y++;
     if (checkCollision(piece, board)) {
       piece.position.y--;
-      solidifyPiece();
+      const updatePiece = solidifyPiece({
+        piece,
+        board,
+        nextPiece,
+        nextPieceCanvas,
+        nextPieceContext,
+      });
+      piece = updatePiece.piece;
+      nextPiece = updatePiece.nextPiece;
       checkAndRemoveRows(board);
       piece = generateRandomPiece();
     }
@@ -114,46 +123,22 @@ function gameLoop(time = 0) {
   window.requestAnimationFrame(gameLoop);
 }
 
-function solidifyPiece() {
-  piece.shape.forEach((row, y) => {
-    row.forEach((value, x) => {
-      if (value === 1) {
-        board[y + piece.position.y][x + piece.position.x] = {
-          color: piece.color,
-          border: piece.border,
-        };
-      }
-    });
-  });
-
-  // Check and remove rows before resetting the position
-  checkAndRemoveRows(board);
-
-  // reset position
-  piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
-  piece.position.y = 0;
-
-  // Get the next piece
-  piece = nextPiece;
-
-  // Generate a new next piece
-  nextPiece = generateRandomPiece();
-
-  // Game over check for the new piece
-  if (checkCollision(piece, board)) {
-    globalVariables.isGameOver = true;
-    board.forEach((row) => row.fill(0));
-  }
-
-  drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
-}
-
 // EVENT LISTENERS
 
 // Arrow key event listeners
 document.addEventListener('keydown', (event) => {
   if (globalVariables.isPaused) return;
-  handleArrowKeys(event, piece, board, solidifyPiece);
+  handleArrowKeys(event, piece, board, () => {
+    const updatePiece = solidifyPiece({
+      piece,
+      board,
+      nextPiece,
+      nextPieceCanvas,
+      nextPieceContext,
+    });
+    piece = updatePiece.piece;
+    nextPiece = updatePiece.nextPiece;
+  });
 });
 // Pause key event listener
 document.addEventListener(
