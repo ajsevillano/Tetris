@@ -43,5 +43,6 @@ export default function solidifyPiece({
   }
 
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
+  console.log('nextPiece', nextPiece);
   return { piece, nextPiece };
 }

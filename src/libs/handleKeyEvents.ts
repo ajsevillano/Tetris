@@ -27,7 +27,6 @@ export function handleArrowKeys(
     if (checkCollision(updatedPiece, board)) {
       updatedPiece.position.y--;
       solidifyPiece();
-
       piece = generateRandomPiece();
     }
   }

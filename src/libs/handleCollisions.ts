@@ -2,7 +2,6 @@ import { state } from '../globalStates';
 import checkCollision from './checkCollisions';
 import solidifyPiece from './solidifyPiece';
 import checkAndRemoveRows from './removeRows';
-import generateRandomPiece from './generateRandomPiece';
 
 export default function handleCollisions({
   time,
@@ -29,8 +28,8 @@ export default function handleCollisions({
       piece = updatePiece.piece;
       nextPiece = updatePiece.nextPiece;
       checkAndRemoveRows(board);
-      piece = generateRandomPiece();
     }
     state.dropCounter = 0;
   }
+  return { piece, nextPiece };
 }

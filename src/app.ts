@@ -92,7 +92,7 @@ function gameLoop(time = 0) {
     renderBoard(renderBoardProps);
   }
 
-  handleCollisions({
+  const updatedPieces = handleCollisions({
     time,
     piece,
     board,
@@ -100,6 +100,8 @@ function gameLoop(time = 0) {
     nextPieceCanvas,
     nextPieceContext,
   });
+  piece = updatedPieces.piece;
+  nextPiece = updatedPieces.nextPiece;
 
   window.requestAnimationFrame(gameLoop);
 }
