@@ -6,8 +6,6 @@ export default function checkAndRemoveRows(board: any) {
   const fullRows = [];
   let linesRemoved = 0;
 
-  state.score;
-
   for (let y = 0; y < CANVAS_CONFIG.MAIN.BOARD_HEIGHT; y++) {
     if (board[y].every((value: any) => value !== 0)) {
       fullRows.push(y);
