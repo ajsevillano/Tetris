@@ -3,7 +3,7 @@ import checkCollision from './checkCollisions';
 import solidifyPiece from './solidifyPiece';
 import checkAndRemoveRows from './removeRows';
 
-export default function handleCollisions({
+export default function handleGravityCollisions({
   time,
   piece,
   board,

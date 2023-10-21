@@ -22,7 +22,8 @@ import {
 } from './libs/draws';
 import resetGame from './libs/resetGame';
 import solidifyPiece from './libs/solidifyPiece';
-import handleCollisions from './libs/handleCollisions';
+
+import handleGravityCollisions from './libs/handleGravityCollisions';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -92,7 +93,7 @@ function gameLoop(time = 0) {
     renderBoard(renderBoardProps);
   }
 
-  const updatedPieces = handleCollisions({
+  const updatedPieces = handleGravityCollisions({
     time,
     piece,
     board,
