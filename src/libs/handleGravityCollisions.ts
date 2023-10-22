@@ -6,7 +6,6 @@ import checkAndRemoveRows from './removeRows';
 export default function handleGravityCollisions({
   time,
   piece,
-  board,
   nextPiece,
   nextPieceCanvas,
   nextPieceContext,
@@ -16,18 +15,17 @@ export default function handleGravityCollisions({
   state.dropCounter += deltaTime;
   if (state.dropCounter > state.fallSpeed) {
     piece.position.y++;
-    if (checkCollision(piece, board)) {
+    if (checkCollision(piece)) {
       piece.position.y--;
       const updatePiece = solidifyPiece({
         piece,
-        board,
         nextPiece,
         nextPieceCanvas,
         nextPieceContext,
       });
       piece = updatePiece.piece;
       nextPiece = updatePiece.nextPiece;
-      checkAndRemoveRows(board);
+      checkAndRemoveRows();
     }
     state.dropCounter = 0;
   }

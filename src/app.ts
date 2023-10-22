@@ -13,7 +13,6 @@ import {
 } from './libs/handleKeyEvents';
 import generateRandomPiece from './libs/generateRandomPiece';
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
-import createBoardMatrix from './libs/createBoardMatrix';
 import renderBoard from './libs/renders/renderBoard';
 import {
   drawPauseScreen,
@@ -57,10 +56,10 @@ let piece = generateRandomPiece();
 let nextPiece = generateRandomPiece();
 
 // Board
-const board = createBoardMatrix(
-  CANVAS_CONFIG.MAIN.BOARD_WIDTH,
-  CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
-);
+// const board = createBoardMatrix(
+//   CANVAS_CONFIG.MAIN.BOARD_WIDTH,
+//   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
+// );
 
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
@@ -83,7 +82,6 @@ function gameLoop(time = 0) {
       context,
       canvas,
       piece,
-      board,
       linesElement,
       levelElement,
       scoreElement,
@@ -94,7 +92,6 @@ function gameLoop(time = 0) {
   const updatedPieces = handleGravityCollisions({
     time,
     piece,
-    board,
     nextPiece,
     nextPieceCanvas,
     nextPieceContext,
@@ -110,10 +107,9 @@ function addEventListeners() {
   // Arrow key event listeners
   document.addEventListener('keydown', (event) => {
     if (state.isPaused) return;
-    handleArrowKeys(event, piece, board, () => {
+    handleArrowKeys(event, piece, () => {
       const updatePiece = solidifyPiece({
         piece,
-        board,
         nextPiece,
         nextPieceCanvas,
         nextPieceContext,
@@ -128,12 +124,12 @@ function addEventListeners() {
 
   // Enter key event listener
   document.addEventListener('keydown', (event) =>
-    handleEnterKey(event, () => resetGame(board, piece, gameLoop)),
+    handleEnterKey(event, () => resetGame(piece, gameLoop)),
   );
 
   // R key event listener
   document.addEventListener('keydown', (event) =>
-    handleRkey(event, () => resetGame(board, piece, gameLoop)),
+    handleRkey(event, () => resetGame(piece, gameLoop)),
   );
 }
 

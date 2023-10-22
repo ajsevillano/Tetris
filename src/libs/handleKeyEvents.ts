@@ -6,26 +6,26 @@ import generateRandomPiece from './generateRandomPiece';
 export function handleArrowKeys(
   event: KeyboardEvent,
   piece: any,
-  board: any,
+
   solidifyPiece: () => void,
 ) {
   let updatedPiece = { ...piece };
 
   if (event.key === EVENT_MOVEMENTS.LEFT) {
     updatedPiece.position.x--;
-    if (checkCollision(updatedPiece, board)) {
+    if (checkCollision(updatedPiece)) {
       updatedPiece.position.x++;
     }
   }
   if (event.key === EVENT_MOVEMENTS.RIGHT) {
     updatedPiece.position.x++;
-    if (checkCollision(updatedPiece, board)) {
+    if (checkCollision(updatedPiece)) {
       updatedPiece.position.x--;
     }
   }
   if (event.key === EVENT_MOVEMENTS.DOWN) {
     updatedPiece.position.y++;
-    if (checkCollision(updatedPiece, board)) {
+    if (checkCollision(updatedPiece)) {
       updatedPiece.position.y--;
       solidifyPiece();
       piece = generateRandomPiece();
@@ -45,7 +45,7 @@ export function handleArrowKeys(
       }
       const previousShape = updatedPiece.shape;
       piece.shape = rotated;
-      if (checkCollision(updatedPiece, board)) {
+      if (checkCollision(updatedPiece)) {
         updatedPiece.shape = previousShape;
       }
     }

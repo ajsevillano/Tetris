@@ -9,14 +9,13 @@ export default function renderBoard({
   context,
   canvas,
   piece,
-  board,
   linesElement,
   levelElement,
   scoreElement,
 }: RenderBoardProps) {
   drawBoard(context, canvas);
   renderFallingPieces(piece, context);
-  renderSolidifiedPieces(board, context);
+  renderSolidifiedPieces(context);
   // Update state
   updateElementText(scoreElement, state.score);
   updateElementText(levelElement, state.level);

@@ -7,7 +7,7 @@ import { drawNextPieceOnCanvas } from './draws';
 
 export default function solidifyPiece({
   piece,
-  board,
+
   nextPiece,
   nextPieceCanvas,
   nextPieceContext,
@@ -15,7 +15,7 @@ export default function solidifyPiece({
   piece.shape.forEach((row: any, y: any) => {
     row.forEach((value: any, x: any) => {
       if (value === 1) {
-        board[y + piece.position.y][x + piece.position.x] = {
+        state.board[y + piece.position.y][x + piece.position.x] = {
           color: piece.color,
           border: piece.border,
         };
@@ -24,7 +24,7 @@ export default function solidifyPiece({
   });
 
   // Check and remove rows before resetting the position
-  checkAndRemoveRows(board);
+  checkAndRemoveRows();
 
   // reset position
   piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
@@ -37,9 +37,9 @@ export default function solidifyPiece({
   nextPiece = generateRandomPiece();
 
   // Game over check for the new piece
-  if (checkCollision(piece, board)) {
+  if (checkCollision(piece)) {
     state.isGameOver = true;
-    board.forEach((row: any) => row.fill(0));
+    state.board.forEach((row: any) => row.fill(0));
   }
 
   drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);

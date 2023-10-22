@@ -1,9 +1,9 @@
 import { state } from '../globalStates';
 import { SPEED_CONFIG } from '../const';
 
-export default function resetGame(board: any, piece: any, gameLoop: any) {
+export default function resetGame(piece: any, gameLoop: any) {
   // Empty the board & reset score
-  board.forEach((row: any) => row.fill(0));
+  state.board.forEach((row: any) => row.fill(0));
   rebootVariables(piece);
   gameLoop();
 }
