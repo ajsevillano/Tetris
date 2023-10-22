@@ -46,13 +46,11 @@ nextPieceCanvas.width =
 nextPieceCanvas.height =
   CANVAS_CONFIG.NEXT_PIECE.BLOCK_SIZE * CANVAS_CONFIG.NEXT_PIECE.BOARD_HEIGHT;
 
-// Score,lines and level elements
+// Score,lines and level DOM elements
 const linesElement: HTMLElement | null = document.querySelector('#lines');
 const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
-
-// Drop counter
 
 // Pieces
 let piece = generateRandomPiece();
@@ -108,33 +106,37 @@ function gameLoop(time = 0) {
 }
 
 // EVENT LISTENERS
-// Arrow key event listeners
-document.addEventListener('keydown', (event) => {
-  if (state.isPaused) return;
-  handleArrowKeys(event, piece, board, () => {
-    const updatePiece = solidifyPiece({
-      piece,
-      board,
-      nextPiece,
-      nextPieceCanvas,
-      nextPieceContext,
+function addEventListeners() {
+  // Arrow key event listeners
+  document.addEventListener('keydown', (event) => {
+    if (state.isPaused) return;
+    handleArrowKeys(event, piece, board, () => {
+      const updatePiece = solidifyPiece({
+        piece,
+        board,
+        nextPiece,
+        nextPieceCanvas,
+        nextPieceContext,
+      });
+      piece = updatePiece.piece;
+      nextPiece = updatePiece.nextPiece;
     });
-    piece = updatePiece.piece;
-    nextPiece = updatePiece.nextPiece;
   });
-});
-// Pause key event listener
-document.addEventListener('keydown', (event) => handlePause(event));
 
-// Enter key event listener
-document.addEventListener('keydown', (event) =>
-  handleEnterKey(event, () => resetGame(board, piece, gameLoop)),
-);
+  // Pause key event listener
+  document.addEventListener('keydown', (event) => handlePause(event));
 
-// R key event listener
-document.addEventListener('keydown', (event) =>
-  handleRkey(event, () => resetGame(board, piece, gameLoop)),
-);
+  // Enter key event listener
+  document.addEventListener('keydown', (event) =>
+    handleEnterKey(event, () => resetGame(board, piece, gameLoop)),
+  );
+
+  // R key event listener
+  document.addEventListener('keydown', (event) =>
+    handleRkey(event, () => resetGame(board, piece, gameLoop)),
+  );
+}
 
 // Execute the game for the first time
+addEventListeners();
 gameLoop();
