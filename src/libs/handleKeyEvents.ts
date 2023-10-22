@@ -1,4 +1,5 @@
 import { EVENT_MOVEMENTS } from '../const';
+import { state } from '../globalStates';
 import checkCollision from './checkCollisions';
 import generateRandomPiece from './generateRandomPiece';
 
@@ -52,29 +53,28 @@ export function handleArrowKeys(
   return piece;
 }
 
-export function handlePause(event: KeyboardEvent, isPaused: boolean) {
-  let updatedIsPaused = isPaused;
-  if (event.key === 'p' || event.key === 'P') {
-    updatedIsPaused = !isPaused;
+export function handlePause(event: KeyboardEvent) {
+  if (
+    event.key === EVENT_MOVEMENTS.PAUSE_LOWERCASE ||
+    event.key === EVENT_MOVEMENTS.PAUSE_UPPERCASE
+  ) {
+    state.isPaused = !state.isPaused;
   }
-
-  return updatedIsPaused;
 }
 
-export function handleEnterKey(
-  event: KeyboardEvent,
-  isGameOver: boolean,
-  reStartGame: () => void,
-) {
-  if (event.key === 'Enter') {
-    if (isGameOver) {
+export function handleEnterKey(event: KeyboardEvent, reStartGame: () => void) {
+  if (event.key === EVENT_MOVEMENTS.ENTER) {
+    if (state.isGameOver) {
       reStartGame();
     }
   }
 }
 
 export function handleRkey(event: KeyboardEvent, reStartGame: () => void) {
-  if (event.code === 'KeyR' || event.code === 'Keyr') {
+  if (
+    event.key === EVENT_MOVEMENTS.RESTART_LOWERCASE ||
+    event.key === EVENT_MOVEMENTS.RESTART_UPPERCASE
+  ) {
     reStartGame();
   }
 }

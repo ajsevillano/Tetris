@@ -124,16 +124,11 @@ document.addEventListener('keydown', (event) => {
   });
 });
 // Pause key event listener
-document.addEventListener(
-  'keydown',
-  (event) => (state.isPaused = handlePause(event, state.isPaused)),
-);
+document.addEventListener('keydown', (event) => handlePause(event));
 
 // Enter key event listener
 document.addEventListener('keydown', (event) =>
-  handleEnterKey(event, state.isGameOver, () =>
-    resetGame(board, piece, gameLoop),
-  ),
+  handleEnterKey(event, () => resetGame(board, piece, gameLoop)),
 );
 
 // R key event listener

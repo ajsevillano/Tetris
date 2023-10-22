@@ -18,6 +18,9 @@ export const EVENT_MOVEMENTS = {
   UP: 'ArrowUp',
   PAUSE_UPPERCASE: 'P',
   PAUSE_LOWERCASE: 'p',
+  ENTER: 'Enter',
+  RESTART_UPPERCASE: 'R',
+  RESTART_LOWERCASE: 'r',
 };
 
 export const SCORE_CONFIG = {
