@@ -55,12 +55,6 @@ const scoreElement: HTMLElement | null =
 let piece = generateRandomPiece();
 let nextPiece = generateRandomPiece();
 
-// Board
-// const board = createBoardMatrix(
-//   CANVAS_CONFIG.MAIN.BOARD_WIDTH,
-//   CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
-// );
-
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   shouldIncreaseFallSpeed();
