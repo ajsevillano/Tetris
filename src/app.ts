@@ -53,12 +53,11 @@ const scoreElement: HTMLElement | null =
 
 // Pieces
 let piece = generateRandomPiece();
-let nextPiece = generateRandomPiece();
 
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
   shouldIncreaseFallSpeed();
-  drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
+  drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
   if (state.isGameOver) {
     drawGameOverScreen(context);
@@ -86,12 +85,11 @@ function gameLoop(time = 0) {
   const updatedPieces = handleGravityCollisions({
     time,
     piece,
-    nextPiece,
+
     nextPieceCanvas,
     nextPieceContext,
   });
   piece = updatedPieces.piece;
-  nextPiece = updatedPieces.nextPiece;
 
   window.requestAnimationFrame(gameLoop);
 }
@@ -104,12 +102,11 @@ function addEventListeners() {
     handleArrowKeys(event, piece, () => {
       const updatePiece = solidifyPiece({
         piece,
-        nextPiece,
+
         nextPieceCanvas,
         nextPieceContext,
       });
       piece = updatePiece.piece;
-      nextPiece = updatePiece.nextPiece;
     });
   });
 
@@ -118,12 +115,18 @@ function addEventListeners() {
 
   // Enter key event listener
   document.addEventListener('keydown', (event) =>
-    handleEnterKey(event, () => resetGame(piece, gameLoop)),
+    handleEnterKey(event, () => {
+      const newPiece = resetGame(piece, gameLoop);
+      piece = newPiece;
+    }),
   );
 
   // R key event listener
   document.addEventListener('keydown', (event) =>
-    handleRkey(event, () => resetGame(piece, gameLoop)),
+    handleRkey(event, () => {
+      const newPiece = resetGame(piece, gameLoop);
+      piece = newPiece;
+    }),
   );
 }
 

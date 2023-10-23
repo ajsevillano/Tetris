@@ -1,11 +1,13 @@
 import { state } from '../globalStates';
 import { SPEED_CONFIG } from '../const';
+import generateRandomPiece from './generateRandomPiece';
 
 export default function resetGame(piece: any, gameLoop: any) {
   // Empty the board & reset score
   state.board.forEach((row: any) => row.fill(0));
-  rebootVariables(piece);
+  const updatedPiece = rebootVariables(piece);
   gameLoop();
+  return updatedPiece;
 }
 
 function rebootVariables(piece: any) {
@@ -17,4 +19,7 @@ function rebootVariables(piece: any) {
   piece.position.x = 5;
   piece.position.y = -1;
   state.isGameOver = false;
+  state.nextPiece = generateRandomPiece();
+  piece = generateRandomPiece();
+  return piece;
 }

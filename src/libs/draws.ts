@@ -1,3 +1,5 @@
+import { state } from '../globalStates';
+
 export function drawBoard(context: any, canvas: any) {
   context.fillStyle = '#121212';
   context.fillRect(0, 0, canvas.width, canvas.height);
@@ -76,15 +78,14 @@ export function drawPieces({
 }
 
 export function drawNextPieceOnCanvas(
-  piece: any,
   nextPieceCanvas: any,
   nextPieceContext: any,
 ) {
   drawBoard(nextPieceContext, nextPieceCanvas);
 
   const scale = 25;
-  const pieceWidth = piece.shape[0].length;
-  const pieceHeight = piece.shape.length;
+  const pieceWidth = state.nextPiece.shape[0].length;
+  const pieceHeight = state.nextPiece.shape.length;
 
   // Calculate the scaled width and height of the piece
   const scaledWidth = pieceWidth * scale;
@@ -95,14 +96,14 @@ export function drawNextPieceOnCanvas(
   const offsetY = (nextPieceCanvas.height - scaledHeight) / 2;
 
   // Draw the piece
-  piece.shape.forEach((row: any[], y: number) => {
+  state.nextPiece.shape.forEach((row: any[], y: number) => {
     row.forEach((value, x: number) => {
       if (value) {
         const xPos = x * scale + offsetX;
         const yPos = y * scale + offsetY;
         const pieceProps = {
-          value: piece.color,
-          border: piece.border,
+          value: state.nextPiece.color,
+          border: state.nextPiece.border,
           x: xPos,
           y: yPos,
           context: nextPieceContext,

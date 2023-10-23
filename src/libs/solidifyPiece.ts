@@ -7,7 +7,7 @@ import { drawNextPieceOnCanvas } from './draws';
 
 export default function solidifyPiece({
   piece,
-  nextPiece,
+
   nextPieceCanvas,
   nextPieceContext,
 }: any) {
@@ -30,10 +30,10 @@ export default function solidifyPiece({
   piece.position.y = 0;
 
   // Get the next piece
-  piece = nextPiece;
+  piece = state.nextPiece;
 
   // Generate a new next piece
-  nextPiece = generateRandomPiece();
+  state.nextPiece = generateRandomPiece();
 
   // Game over check for the new piece
   if (checkCollision(piece)) {
@@ -41,6 +41,6 @@ export default function solidifyPiece({
     state.board.forEach((row: any) => row.fill(0));
   }
 
-  drawNextPieceOnCanvas(nextPiece, nextPieceCanvas, nextPieceContext);
-  return { piece, nextPiece };
+  drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
+  return { piece };
 }
