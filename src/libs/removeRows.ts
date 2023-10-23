@@ -1,6 +1,6 @@
 import { CANVAS_CONFIG } from '../const';
 import { state } from '../globalStates';
-import updateScore from './updateScore';
+import updateScore from '../helpers/updateScore';
 
 export default function checkAndRemoveRows() {
   const fullRows = [];
