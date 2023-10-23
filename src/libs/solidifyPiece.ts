@@ -7,7 +7,6 @@ import { drawNextPieceOnCanvas } from './draws';
 
 export default function solidifyPiece({
   piece,
-
   nextPiece,
   nextPieceCanvas,
   nextPieceContext,

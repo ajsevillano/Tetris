@@ -22,46 +22,67 @@ export function handleArrowKeys(
 ) {
   let updatedPiece = { ...piece };
 
-  if (event.key === LEFT) {
-    updatedPiece.position.x--;
-    if (checkCollision(updatedPiece)) {
-      updatedPiece.position.x++;
+  switch (event.key) {
+    case LEFT: {
+      handleLeftMovement(updatedPiece);
+      break;
     }
-  }
-  if (event.key === RIGHT) {
-    updatedPiece.position.x++;
-    if (checkCollision(updatedPiece)) {
-      updatedPiece.position.x--;
+    case RIGHT: {
+      handleRightMovement(updatedPiece);
+      break;
     }
-  }
-  if (event.key === DOWN) {
-    updatedPiece.position.y++;
-    if (checkCollision(updatedPiece)) {
-      updatedPiece.position.y--;
-      solidifyPiece();
+    case DOWN: {
+      handleDownMovement(updatedPiece, solidifyPiece);
       piece = generateRandomPiece();
+      break;
+    }
+    case UP: {
+      handleUpMovement(updatedPiece, piece);
+      break;
     }
   }
-  if (event.key === UP) {
-    if (event.key === UP) {
-      const rotated = [];
 
-      for (let i = 0; i < updatedPiece.shape[0].length; i++) {
-        const row = [];
-
-        for (let j = updatedPiece.shape.length - 1; j >= 0; j--) {
-          row.push(updatedPiece.shape[j][i]);
-        }
-        rotated.push(row);
-      }
-      const previousShape = updatedPiece.shape;
-      piece.shape = rotated;
-      if (checkCollision(updatedPiece)) {
-        updatedPiece.shape = previousShape;
-      }
-    }
-  }
   return piece;
+}
+
+function handleDownMovement(updatedPiece: any, solidifyPiece: () => void) {
+  updatedPiece.position.y++;
+  if (checkCollision(updatedPiece)) {
+    updatedPiece.position.y--;
+    solidifyPiece();
+  }
+}
+
+function handleLeftMovement(updatedPiece: any) {
+  updatedPiece.position.x--;
+  if (checkCollision(updatedPiece)) {
+    updatedPiece.position.x++;
+  }
+}
+
+function handleRightMovement(updatedPiece: any) {
+  updatedPiece.position.x++;
+  if (checkCollision(updatedPiece)) {
+    updatedPiece.position.x--;
+  }
+}
+
+function handleUpMovement(updatedPiece: any, piece: any) {
+  const rotated = [];
+
+  for (let i = 0; i < updatedPiece.shape[0].length; i++) {
+    const row = [];
+
+    for (let j = updatedPiece.shape.length - 1; j >= 0; j--) {
+      row.push(updatedPiece.shape[j][i]);
+    }
+    rotated.push(row);
+  }
+  const previousShape = updatedPiece.shape;
+  piece.shape = rotated;
+  if (checkCollision(updatedPiece)) {
+    updatedPiece.shape = previousShape;
+  }
 }
 
 export function handlePause(event: KeyboardEvent) {
