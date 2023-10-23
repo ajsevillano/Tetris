@@ -3,27 +3,38 @@ import { state } from '../globalStates';
 import checkCollision from './checkCollisions';
 import generateRandomPiece from './generateRandomPiece';
 
+const {
+  LEFT,
+  RIGHT,
+  DOWN,
+  UP,
+  PAUSE_LOWERCASE,
+  PAUSE_UPPERCASE,
+  ENTER,
+  RESTART_LOWERCASE,
+  RESTART_UPPERCASE,
+} = EVENT_MOVEMENTS;
+
 export function handleArrowKeys(
   event: KeyboardEvent,
   piece: any,
-
   solidifyPiece: () => void,
 ) {
   let updatedPiece = { ...piece };
 
-  if (event.key === EVENT_MOVEMENTS.LEFT) {
+  if (event.key === LEFT) {
     updatedPiece.position.x--;
     if (checkCollision(updatedPiece)) {
       updatedPiece.position.x++;
     }
   }
-  if (event.key === EVENT_MOVEMENTS.RIGHT) {
+  if (event.key === RIGHT) {
     updatedPiece.position.x++;
     if (checkCollision(updatedPiece)) {
       updatedPiece.position.x--;
     }
   }
-  if (event.key === EVENT_MOVEMENTS.DOWN) {
+  if (event.key === DOWN) {
     updatedPiece.position.y++;
     if (checkCollision(updatedPiece)) {
       updatedPiece.position.y--;
@@ -31,8 +42,8 @@ export function handleArrowKeys(
       piece = generateRandomPiece();
     }
   }
-  if (event.key === EVENT_MOVEMENTS.UP) {
-    if (event.key === EVENT_MOVEMENTS.UP) {
+  if (event.key === UP) {
+    if (event.key === UP) {
       const rotated = [];
 
       for (let i = 0; i < updatedPiece.shape[0].length; i++) {
@@ -54,16 +65,12 @@ export function handleArrowKeys(
 }
 
 export function handlePause(event: KeyboardEvent) {
-  if (
-    event.key === EVENT_MOVEMENTS.PAUSE_LOWERCASE ||
-    event.key === EVENT_MOVEMENTS.PAUSE_UPPERCASE
-  ) {
+  if (event.key === PAUSE_LOWERCASE || event.key === PAUSE_UPPERCASE)
     state.isPaused = !state.isPaused;
-  }
 }
 
 export function handleEnterKey(event: KeyboardEvent, reStartGame: () => void) {
-  if (event.key === EVENT_MOVEMENTS.ENTER) {
+  if (event.key === ENTER) {
     if (state.isGameOver) {
       reStartGame();
     }
@@ -71,10 +78,7 @@ export function handleEnterKey(event: KeyboardEvent, reStartGame: () => void) {
 }
 
 export function handleRkey(event: KeyboardEvent, reStartGame: () => void) {
-  if (
-    event.key === EVENT_MOVEMENTS.RESTART_LOWERCASE ||
-    event.key === EVENT_MOVEMENTS.RESTART_UPPERCASE
-  ) {
+  if (event.key === RESTART_LOWERCASE || event.key === RESTART_UPPERCASE) {
     reStartGame();
   }
 }
