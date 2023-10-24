@@ -1,81 +1,96 @@
 import { EVENT_MOVEMENTS } from '../const';
+import { state } from '../globalStates';
 import checkCollision from './checkCollisions';
 import generateRandomPiece from './generateRandomPiece';
 
+const {
+  LEFT,
+  RIGHT,
+  DOWN,
+  UP,
+  PAUSE_LOWERCASE,
+  PAUSE_UPPERCASE,
+  ENTER,
+  RESTART_LOWERCASE,
+  RESTART_UPPERCASE,
+} = EVENT_MOVEMENTS;
+
 export function handleArrowKeys(
   event: KeyboardEvent,
-  piece: any,
-  board: any,
+
   solidifyPiece: () => void,
 ) {
-  let updatedPiece = { ...piece };
-
-  if (event.key === EVENT_MOVEMENTS.LEFT) {
-    updatedPiece.position.x--;
-    if (checkCollision(updatedPiece, board)) {
-      updatedPiece.position.x++;
+  switch (event.key) {
+    case LEFT: {
+      handleLeftMovement();
+      break;
+    }
+    case RIGHT: {
+      handleRightMovement();
+      break;
+    }
+    case DOWN: {
+      handleDownMovement(solidifyPiece);
+      generateRandomPiece();
+      break;
+    }
+    case UP: {
+      handleUpMovement();
+      break;
     }
   }
-  if (event.key === EVENT_MOVEMENTS.RIGHT) {
-    updatedPiece.position.x++;
-    if (checkCollision(updatedPiece, board)) {
-      updatedPiece.position.x--;
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.DOWN) {
-    updatedPiece.position.y++;
-    if (checkCollision(updatedPiece, board)) {
-      updatedPiece.position.y--;
-      solidifyPiece();
-
-      piece = generateRandomPiece();
-    }
-  }
-  if (event.key === EVENT_MOVEMENTS.UP) {
-    if (event.key === EVENT_MOVEMENTS.UP) {
-      const rotated = [];
-
-      for (let i = 0; i < updatedPiece.shape[0].length; i++) {
-        const row = [];
-
-        for (let j = updatedPiece.shape.length - 1; j >= 0; j--) {
-          row.push(updatedPiece.shape[j][i]);
-        }
-        rotated.push(row);
-      }
-      const previousShape = updatedPiece.shape;
-      piece.shape = rotated;
-      if (checkCollision(updatedPiece, board)) {
-        updatedPiece.shape = previousShape;
-      }
-    }
-  }
-  return piece;
 }
 
-export function handlePause(event: KeyboardEvent, isPaused: boolean) {
-  let updatedIsPaused = isPaused;
-  if (event.key === 'p' || event.key === 'P') {
-    updatedIsPaused = !isPaused;
+function handleDownMovement(solidifyPiece: () => void) {
+  state.piece.position.y++;
+  if (checkCollision()) {
+    state.piece.position.y--;
+    solidifyPiece();
   }
-
-  return updatedIsPaused;
 }
 
-export function handleEnterKey(
-  event: KeyboardEvent,
-  isGameOver: boolean,
-  reStartGame: () => void,
-) {
-  if (event.key === 'Enter') {
-    if (isGameOver) {
+function handleLeftMovement() {
+  state.piece.position.x--;
+  if (checkCollision()) {
+    state.piece.position.x++;
+  }
+}
+
+function handleRightMovement() {
+  state.piece.position.x++;
+  if (checkCollision()) {
+    state.piece.position.x--;
+  }
+}
+
+function handleUpMovement() {
+  const rotated = [];
+
+  for (let i = 0; i < state.piece.shape[0].length; i++) {
+    const row = [];
+    for (let j = state.piece.shape.length - 1; j >= 0; j--) {
+      row.push(state.piece.shape[j][i]);
+    }
+    rotated.push(row);
+  }
+  state.piece.shape = rotated;
+}
+
+export function handlePause(event: KeyboardEvent) {
+  if (event.key === PAUSE_LOWERCASE || event.key === PAUSE_UPPERCASE)
+    state.isPaused = !state.isPaused;
+}
+
+export function handleEnterKey(event: KeyboardEvent, reStartGame: () => void) {
+  if (event.key === ENTER) {
+    if (state.isGameOver) {
       reStartGame();
     }
   }
 }
 
 export function handleRkey(event: KeyboardEvent, reStartGame: () => void) {
-  if (event.code === 'KeyR' || event.code === 'Keyr') {
+  if (event.key === RESTART_LOWERCASE || event.key === RESTART_UPPERCASE) {
     reStartGame();
   }
 }

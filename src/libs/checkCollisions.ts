@@ -1,11 +1,12 @@
 import { CANVAS_CONFIG } from '../const';
+import { state } from '../globalStates';
 
-export default function checkCollision(piece: any, board: any) {
-  for (let y = 0; y < piece.shape.length; y++) {
-    for (let x = 0; x < piece.shape[y].length; x++) {
-      if (piece.shape[y][x] !== 0) {
-        const boardY = y + piece.position.y;
-        const boardX = x + piece.position.x;
+export default function checkCollision() {
+  for (let y = 0; y < state.piece.shape.length; y++) {
+    for (let x = 0; x < state.piece.shape[y].length; x++) {
+      if (state.piece.shape[y][x] !== 0) {
+        const boardY = y + state.piece.position.y;
+        const boardX = x + state.piece.position.x;
         if (
           boardY >= CANVAS_CONFIG.MAIN.BOARD_HEIGHT ||
           boardX < 0 ||
@@ -14,7 +15,7 @@ export default function checkCollision(piece: any, board: any) {
             boardY < CANVAS_CONFIG.MAIN.BOARD_HEIGHT &&
             boardX >= 0 &&
             boardX < CANVAS_CONFIG.MAIN.BOARD_WIDTH &&
-            board[boardY][boardX] !== 0)
+            state.board[boardY][boardX] !== 0)
         ) {
           return true;
         }
