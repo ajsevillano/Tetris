@@ -11,7 +11,7 @@ import {
   handleRkey,
   handleArrowKeys,
 } from './libs/handleKeyEvents';
-import generateRandomPiece from './libs/generateRandomPiece';
+
 import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
 import renderBoard from './libs/renders/renderBoard';
 import {
@@ -52,10 +52,10 @@ const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
 // Pieces
-let piece = generateRandomPiece();
 
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
+  console.log(state.fallSpeed);
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
@@ -74,7 +74,6 @@ function gameLoop(time = 0) {
     let renderBoardProps: any = {
       context,
       canvas,
-      piece,
       linesElement,
       levelElement,
       scoreElement,
@@ -82,14 +81,11 @@ function gameLoop(time = 0) {
     renderBoard(renderBoardProps);
   }
 
-  const updatedPieces = handleGravityCollisions({
+  handleGravityCollisions({
     time,
-    piece,
-
     nextPieceCanvas,
     nextPieceContext,
   });
-  piece = updatedPieces.piece;
 
   window.requestAnimationFrame(gameLoop);
 }
@@ -99,15 +95,9 @@ function addEventListeners() {
   // Arrow key event listeners
   document.addEventListener('keydown', (event) => {
     if (state.isPaused) return;
-    handleArrowKeys(event, piece, () => {
-      const updatePiece = solidifyPiece({
-        piece,
-
-        nextPieceCanvas,
-        nextPieceContext,
-      });
-      piece = updatePiece.piece;
-    });
+    handleArrowKeys(event, () =>
+      solidifyPiece({ nextPieceCanvas, nextPieceContext }),
+    );
   });
 
   // Pause key event listener
@@ -115,18 +105,12 @@ function addEventListeners() {
 
   // Enter key event listener
   document.addEventListener('keydown', (event) =>
-    handleEnterKey(event, () => {
-      const newPiece = resetGame(piece, gameLoop);
-      piece = newPiece;
-    }),
+    handleEnterKey(event, () => resetGame(gameLoop)),
   );
 
   // R key event listener
   document.addEventListener('keydown', (event) =>
-    handleRkey(event, () => {
-      const newPiece = resetGame(piece, gameLoop);
-      piece = newPiece;
-    }),
+    handleRkey(event, () => resetGame(gameLoop)),
   );
 }
 
