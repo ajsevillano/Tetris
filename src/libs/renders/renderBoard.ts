@@ -8,13 +8,12 @@ import { state } from '../../globalStates';
 export default function renderBoard({
   context,
   canvas,
-  piece,
   linesElement,
   levelElement,
   scoreElement,
 }: RenderBoardProps) {
   drawBoard(context, canvas);
-  renderFallingPieces(piece, context);
+  renderFallingPieces(context);
   renderSolidifiedPieces(context);
   // Update state
   updateElementText(scoreElement, state.score);

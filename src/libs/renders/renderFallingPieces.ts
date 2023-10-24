@@ -1,15 +1,16 @@
 import { drawPieces } from '../draws';
-import { Piece } from './types';
+import { Cell } from './types';
+import { state } from '../../globalStates';
 
-export default function renderFallingPieces(piece: Piece, context: any) {
-  piece.shape.forEach((row: number[], y: number) => {
-    row.forEach((cell, x) => {
+export default function renderFallingPieces(context: any) {
+  state.piece.shape.forEach((row: number[], y: number) => {
+    row.forEach((cell: Cell | number, x: number) => {
       if (cell) {
         const pieceProps = {
-          value: piece.color,
-          border: piece.border,
-          x: x + piece.position.x,
-          y: y + piece.position.y,
+          value: state.piece.color,
+          border: state.piece.border,
+          x: x + state.piece.position.x,
+          y: y + state.piece.position.y,
           context: context,
           lineWidth: 0.06,
           width: 1,

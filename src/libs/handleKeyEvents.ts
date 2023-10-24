@@ -17,72 +17,63 @@ const {
 
 export function handleArrowKeys(
   event: KeyboardEvent,
-  piece: any,
+
   solidifyPiece: () => void,
 ) {
-  let updatedPiece = { ...piece };
-
   switch (event.key) {
     case LEFT: {
-      handleLeftMovement(updatedPiece);
+      handleLeftMovement();
       break;
     }
     case RIGHT: {
-      handleRightMovement(updatedPiece);
+      handleRightMovement();
       break;
     }
     case DOWN: {
-      handleDownMovement(updatedPiece, solidifyPiece);
-      piece = generateRandomPiece();
+      handleDownMovement(solidifyPiece);
+      generateRandomPiece();
       break;
     }
     case UP: {
-      handleUpMovement(updatedPiece, piece);
+      handleUpMovement();
       break;
     }
   }
-
-  return piece;
 }
 
-function handleDownMovement(updatedPiece: any, solidifyPiece: () => void) {
-  updatedPiece.position.y++;
-  if (checkCollision(updatedPiece)) {
-    updatedPiece.position.y--;
+function handleDownMovement(solidifyPiece: () => void) {
+  state.piece.position.y++;
+  if (checkCollision()) {
+    state.piece.position.y--;
     solidifyPiece();
   }
 }
 
-function handleLeftMovement(updatedPiece: any) {
-  updatedPiece.position.x--;
-  if (checkCollision(updatedPiece)) {
-    updatedPiece.position.x++;
+function handleLeftMovement() {
+  state.piece.position.x--;
+  if (checkCollision()) {
+    state.piece.position.x++;
   }
 }
 
-function handleRightMovement(updatedPiece: any) {
-  updatedPiece.position.x++;
-  if (checkCollision(updatedPiece)) {
-    updatedPiece.position.x--;
+function handleRightMovement() {
+  state.piece.position.x++;
+  if (checkCollision()) {
+    state.piece.position.x--;
   }
 }
 
-function handleUpMovement(updatedPiece: any, piece: any) {
+function handleUpMovement() {
   const rotated = [];
 
-  for (let i = 0; i < updatedPiece.shape[0].length; i++) {
+  for (let i = 0; i < state.piece.shape[0].length; i++) {
     const row = [];
-
-    for (let j = updatedPiece.shape.length - 1; j >= 0; j--) {
-      row.push(updatedPiece.shape[j][i]);
+    for (let j = state.piece.shape.length - 1; j >= 0; j--) {
+      row.push(state.piece.shape[j][i]);
     }
     rotated.push(row);
   }
-  const previousShape = updatedPiece.shape;
-  piece.shape = rotated;
-  if (checkCollision(updatedPiece)) {
-    updatedPiece.shape = previousShape;
-  }
+  state.piece.shape = rotated;
 }
 
 export function handlePause(event: KeyboardEvent) {
