@@ -51,11 +51,8 @@ const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
-// Pieces
-
 function gameLoop(time = 0) {
   // Check if the fall speed should be increased
-  console.log(state.fallSpeed);
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
