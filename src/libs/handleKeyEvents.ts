@@ -73,7 +73,11 @@ function handleUpMovement() {
     }
     rotated.push(row);
   }
+  const previousShape = state.piece.shape;
   state.piece.shape = rotated;
+  if (checkCollision()) {
+    state.piece.shape = previousShape;
+  }
 }
 
 export function handlePause(event: KeyboardEvent) {
