@@ -1,4 +1,4 @@
-import { state } from '../globalStates';
+import { state, states } from '../globalStates';
 import { SPEED_CONFIG } from '../const';
 import generateRandomPiece from './generateRandomPiece';
 
@@ -10,14 +10,15 @@ export default function resetGame(gameLoop: any) {
 }
 
 function rebootVariables() {
-  state.score = 0;
-  state.level = 0;
-  state.totalLinesRemoved = 0;
-  state.fallSpeed = SPEED_CONFIG.DEFAULT_FALL_SPEED;
+  states.updateScore(0);
+  states.updateLevel(0);
+  states.updateTotalLinesRemoved(0);
+  states.updateIsGameOver(false);
+  states.updateFallSpeed(SPEED_CONFIG.DEFAULT_FALL_SPEED);
+
   // Set the initial position of the piece
   state.piece.position.x = 5;
   state.piece.position.y = -1;
-  state.isGameOver = false;
   state.nextPiece = generateRandomPiece();
   state.piece = generateRandomPiece();
 }

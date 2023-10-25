@@ -1,8 +1,11 @@
 import { CANVAS_CONFIG } from '../const';
-import { state } from '../globalStates';
-import updateScore from '../helpers/updateScore';
+import { state, states } from '../globalStates';
+import updateScore2 from '../helpers/updateScore';
 
 export default function checkAndRemoveRows() {
+  // Getters
+  let totalLinesRemoved = states.getTotalLinesRemoved();
+
   const fullRows = [];
   let linesRemoved = 0;
 
@@ -19,6 +22,6 @@ export default function checkAndRemoveRows() {
     linesRemoved++;
   });
 
-  state.totalLinesRemoved += linesRemoved;
-  updateScore(linesRemoved);
+  states.updateTotalLinesRemoved((totalLinesRemoved += linesRemoved));
+  updateScore2(linesRemoved);
 }
