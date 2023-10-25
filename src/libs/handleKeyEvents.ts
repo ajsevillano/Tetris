@@ -42,41 +42,54 @@ export function handleArrowKeys(
 }
 
 function handleDownMovement(solidifyPiece: () => void) {
-  state.piece.position.y++;
+  const updatedPiece = states.getPiece();
+  updatedPiece.position.y++;
+  states.setPiece(updatedPiece);
   if (checkCollision()) {
-    state.piece.position.y--;
+    updatedPiece.position.y--;
+    states.setPiece(updatedPiece);
     solidifyPiece();
   }
 }
 
 function handleLeftMovement() {
-  state.piece.position.x--;
+  const updatedPiece = states.getPiece();
+  updatedPiece.position.x--;
+  states.setPiece(updatedPiece);
   if (checkCollision()) {
-    state.piece.position.x++;
+    updatedPiece.position.x++;
+    states.setPiece(updatedPiece);
   }
 }
 
 function handleRightMovement() {
-  state.piece.position.x++;
+  const updatedPiece = states.getPiece();
+  updatedPiece.position.x++;
+  states.setPiece(updatedPiece);
   if (checkCollision()) {
-    state.piece.position.x--;
+    updatedPiece.position.x--;
+    states.setPiece(updatedPiece);
   }
 }
 
 function handleUpMovement() {
+  const updatedPiece = states.getPiece();
   const rotated = [];
 
-  for (let i = 0; i < state.piece.shape[0].length; i++) {
+  for (let i = 0; i < updatedPiece.shape[0].length; i++) {
     const row = [];
-    for (let j = state.piece.shape.length - 1; j >= 0; j--) {
-      row.push(state.piece.shape[j][i]);
+    for (let j = updatedPiece.shape.length - 1; j >= 0; j--) {
+      row.push(updatedPiece.shape[j][i]);
     }
     rotated.push(row);
   }
-  const previousShape = state.piece.shape;
-  state.piece.shape = rotated;
+
+  const previousShape = updatedPiece.shape;
+  updatedPiece.shape = rotated;
+  states.setPiece(updatedPiece);
   if (checkCollision()) {
-    state.piece.shape = previousShape;
+    updatedPiece.shape = previousShape;
+    states.setPiece(updatedPiece);
   }
 }
 

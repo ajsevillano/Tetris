@@ -9,14 +9,14 @@ export default function solidifyPiece({
   nextPieceCanvas,
   nextPieceContext,
 }: any) {
-  state.piece.shape.forEach((row: any, y: any) => {
+  states.getPiece().shape.forEach((row: any, y: any) => {
     row.forEach((value: any, x: any) => {
       if (value === 1) {
-        states.getBoard()[y + state.piece.position.y][
-          x + state.piece.position.x
+        states.getBoard()[y + states.getPiece().position.y][
+          x + states.getPiece().position.x
         ] = {
-          color: state.piece.color,
-          border: state.piece.border,
+          color: states.getPiece().color,
+          border: states.getPiece().border,
         };
       }
     });
@@ -26,12 +26,17 @@ export default function solidifyPiece({
   checkAndRemoveRows();
 
   // reset position
-  state.piece.position.x = Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2);
-  state.piece.position.y = 0;
+  states.setPiece({
+    ...states.getPiece(),
+    position: {
+      x: Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2),
+      y: 0,
+    },
+  });
 
   // Get the next piece
 
-  state.piece = states.getNextPiece();
+  states.setPiece(states.getNextPiece());
 
   // Generate a new next piece
   states.setNextPiece(generateRandomPiece());

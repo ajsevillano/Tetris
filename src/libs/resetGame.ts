@@ -1,4 +1,4 @@
-import { state, states } from '../globalStates';
+import { states } from '../globalStates';
 import { SPEED_CONFIG } from '../const';
 import generateRandomPiece from './generateRandomPiece';
 
@@ -17,8 +17,15 @@ function rebootVariables() {
   states.updateFallSpeed(SPEED_CONFIG.DEFAULT_FALL_SPEED);
 
   // Set the initial position of the piece
-  state.piece.position.x = 5;
-  state.piece.position.y = -1;
+
+  states.setPiece({
+    ...states.getPiece(),
+    position: {
+      x: 5,
+      y: 0,
+    },
+  });
+
   states.setNextPiece(generateRandomPiece());
-  state.piece = generateRandomPiece();
+  states.setPiece(generateRandomPiece());
 }

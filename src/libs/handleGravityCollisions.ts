@@ -13,9 +13,13 @@ export default function handleGravityCollisions({
   state.lastTime = time;
   state.dropCounter += deltaTime;
   if (state.dropCounter > states.getFallSpeed()) {
-    state.piece.position.y++;
+    const updatedPiece = states.getPiece();
+    updatedPiece.position.y++;
+    states.setPiece(updatedPiece);
     if (checkCollision()) {
-      state.piece.position.y--;
+      const updatedPiece = states.getPiece();
+      updatedPiece.position.y--;
+      states.setPiece(updatedPiece);
       solidifyPiece({
         nextPieceCanvas,
         nextPieceContext,

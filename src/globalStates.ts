@@ -7,11 +7,6 @@ import { CANVAS_CONFIG, SCORE_CONFIG, SPEED_CONFIG } from './const';
 export const state = {
   dropCounter: 0,
   lastTime: 0,
-  piece: generateRandomPiece(),
-  board: createBoardMatrix(
-    CANVAS_CONFIG.MAIN.BOARD_WIDTH,
-    CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
-  ),
 };
 
 export const states = (function () {
@@ -29,6 +24,7 @@ export const states = (function () {
     CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
   );
   let nextPiece = generateRandomPiece();
+  let piece = generateRandomPiece();
 
   const updateScore = (newScore: any) => {
     score = newScore;
@@ -94,6 +90,14 @@ export const states = (function () {
     nextPiece = newNextPiece;
   };
 
+  const getPiece = () => {
+    return piece;
+  };
+
+  const setPiece = (newPiece: any) => {
+    piece = newPiece;
+  };
+
   return {
     updateScore,
     updateLevel,
@@ -111,5 +115,7 @@ export const states = (function () {
     setBoard,
     getNextPiece,
     setNextPiece,
+    setPiece,
+    getPiece,
   };
 })();
