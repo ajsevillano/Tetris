@@ -8,7 +8,6 @@ export const state = {
   dropCounter: 0,
   lastTime: 0,
   piece: generateRandomPiece(),
-  nextPiece: generateRandomPiece(),
   board: createBoardMatrix(
     CANVAS_CONFIG.MAIN.BOARD_WIDTH,
     CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
@@ -29,6 +28,7 @@ export const states = (function () {
     CANVAS_CONFIG.MAIN.BOARD_WIDTH,
     CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
   );
+  let nextPiece = generateRandomPiece();
 
   const updateScore = (newScore: any) => {
     score = newScore;
@@ -86,6 +86,14 @@ export const states = (function () {
     board = newBoard;
   };
 
+  const getNextPiece = () => {
+    return nextPiece;
+  };
+
+  const setNextPiece = (newNextPiece: any) => {
+    nextPiece = newNextPiece;
+  };
+
   return {
     updateScore,
     updateLevel,
@@ -101,5 +109,7 @@ export const states = (function () {
     getIsPaused,
     getBoard,
     setBoard,
+    getNextPiece,
+    setNextPiece,
   };
 })();

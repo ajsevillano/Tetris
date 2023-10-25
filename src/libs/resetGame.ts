@@ -19,6 +19,6 @@ function rebootVariables() {
   // Set the initial position of the piece
   state.piece.position.x = 5;
   state.piece.position.y = -1;
-  state.nextPiece = generateRandomPiece();
+  states.setNextPiece(generateRandomPiece());
   state.piece = generateRandomPiece();
 }

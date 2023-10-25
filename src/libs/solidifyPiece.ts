@@ -28,10 +28,11 @@ export default function solidifyPiece({
   state.piece.position.y = 0;
 
   // Get the next piece
-  state.piece = state.nextPiece;
+
+  state.piece = states.getNextPiece();
 
   // Generate a new next piece
-  state.nextPiece = generateRandomPiece();
+  states.setNextPiece(generateRandomPiece());
 
   // Game over check for the new piece
   if (checkCollision()) {
