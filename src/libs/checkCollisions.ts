@@ -1,5 +1,5 @@
 import { CANVAS_CONFIG } from '../const';
-import { state } from '../globalStates';
+import { state, states } from '../globalStates';
 
 export default function checkCollision() {
   for (let y = 0; y < state.piece.shape.length; y++) {
@@ -15,7 +15,7 @@ export default function checkCollision() {
             boardY < CANVAS_CONFIG.MAIN.BOARD_HEIGHT &&
             boardX >= 0 &&
             boardX < CANVAS_CONFIG.MAIN.BOARD_WIDTH &&
-            state.board[boardY][boardX] !== 0)
+            states.getBoard()[boardY][boardX] !== 0)
         ) {
           return true;
         }

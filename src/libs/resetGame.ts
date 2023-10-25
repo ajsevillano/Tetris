@@ -4,7 +4,7 @@ import generateRandomPiece from './generateRandomPiece';
 
 export default function resetGame(gameLoop: any) {
   // Empty the board & reset score
-  state.board.forEach((row: any) => row.fill(0));
+  states.getBoard().forEach((row: any) => row.fill(0));
   rebootVariables();
   gameLoop();
 }

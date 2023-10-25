@@ -12,7 +12,9 @@ export default function solidifyPiece({
   state.piece.shape.forEach((row: any, y: any) => {
     row.forEach((value: any, x: any) => {
       if (value === 1) {
-        state.board[y + state.piece.position.y][x + state.piece.position.x] = {
+        states.getBoard()[y + state.piece.position.y][
+          x + state.piece.position.x
+        ] = {
           color: state.piece.color,
           border: state.piece.border,
         };
@@ -37,7 +39,7 @@ export default function solidifyPiece({
   // Game over check for the new piece
   if (checkCollision()) {
     states.updateIsGameOver(true);
-    state.board.forEach((row: any) => row.fill(0));
+    states.getBoard().forEach((row: any) => row.fill(0));
   }
 
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
