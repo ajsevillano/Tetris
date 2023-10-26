@@ -1,28 +1,26 @@
 // Global state
-import { state } from './globalStates';
+import { states } from './globalStates';
 // Styles
 import './style.css';
 // Constants
 import { CANVAS_CONFIG } from './const';
 // Libs
+import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
+import renderBoard from './libs/renders/renderBoard';
+import resetGame from './libs/resetGame';
+import solidifyPiece from './libs/solidifyPiece';
+import handleGravityCollisions from './libs/handleGravityCollisions';
 import {
   handlePause,
   handleEnterKey,
   handleRkey,
   handleArrowKeys,
 } from './libs/handleKeyEvents';
-
-import shouldIncreaseFallSpeed from './libs/checkFallSpeed';
-import renderBoard from './libs/renders/renderBoard';
 import {
   drawPauseScreen,
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
-import resetGame from './libs/resetGame';
-import solidifyPiece from './libs/solidifyPiece';
-
-import handleGravityCollisions from './libs/handleGravityCollisions';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -56,18 +54,18 @@ function gameLoop(time = 0) {
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
-  if (state.isGameOver) {
+  if (states.getIsGameOver()) {
     drawGameOverScreen(context);
     return;
   }
 
-  if (state.isPaused) {
+  if (states.getIsPaused()) {
     drawPauseScreen(context);
     window.requestAnimationFrame(gameLoop);
     return;
   }
 
-  if (!state.isPaused) {
+  if (!states.getIsPaused()) {
     let renderBoardProps: any = {
       context,
       canvas,
@@ -91,7 +89,7 @@ function gameLoop(time = 0) {
 function addEventListeners() {
   // Arrow key event listeners
   document.addEventListener('keydown', (event) => {
-    if (state.isPaused) return;
+    if (states.getIsPaused()) return;
     handleArrowKeys(event, () =>
       solidifyPiece({ nextPieceCanvas, nextPieceContext }),
     );

@@ -1,4 +1,4 @@
-import { state } from '../globalStates';
+import { state, states } from '../globalStates';
 // Libs
 import checkCollision from './checkCollisions';
 import solidifyPiece from './solidifyPiece';
@@ -12,10 +12,14 @@ export default function handleGravityCollisions({
   const deltaTime = time - state.lastTime;
   state.lastTime = time;
   state.dropCounter += deltaTime;
-  if (state.dropCounter > state.fallSpeed) {
-    state.piece.position.y++;
+  if (state.dropCounter > states.getFallSpeed()) {
+    const updatedPiece = states.getPiece();
+    updatedPiece.position.y++;
+    states.setPiece(updatedPiece);
     if (checkCollision()) {
-      state.piece.position.y--;
+      const updatedPiece = states.getPiece();
+      updatedPiece.position.y--;
+      states.setPiece(updatedPiece);
       solidifyPiece({
         nextPieceCanvas,
         nextPieceContext,

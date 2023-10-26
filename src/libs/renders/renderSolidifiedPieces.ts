@@ -1,9 +1,9 @@
 import { drawPieces } from '../draws';
 import { Cell } from './types';
-import { state } from '../../globalStates';
+import { states } from '../../globalStates';
 
 export default function renderSolidifiedPieces(context: any) {
-  state.board.forEach((row: (number | Cell)[], y: number) => {
+  states.getBoard().forEach((row: (number | Cell)[], y: number) => {
     row.forEach((cell: Cell | number, x: number) => {
       // If the cell is not empty, draw it
       if (typeof cell !== 'number') {
