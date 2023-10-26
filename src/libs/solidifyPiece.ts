@@ -9,14 +9,19 @@ export default function solidifyPiece({
   nextPieceCanvas,
   nextPieceContext,
 }: any) {
-  states.getPiece().shape.forEach((row: any, y: any) => {
+  const piece = states.getPiece();
+  const nextPiece = states.getNextPiece();
+  const board = states.getBoard();
+  let setPiece = states.setPiece;
+  let setIsGameOver = states.setIsGameOver;
+  let setNextPiece = states.setNextPiece;
+
+  piece.shape.forEach((row: any, y: any) => {
     row.forEach((value: any, x: any) => {
       if (value === 1) {
-        states.getBoard()[y + states.getPiece().position.y][
-          x + states.getPiece().position.x
-        ] = {
-          color: states.getPiece().color,
-          border: states.getPiece().border,
+        board[y + piece.position.y][x + piece.position.x] = {
+          color: piece.color,
+          border: piece.border,
         };
       }
     });
@@ -26,8 +31,8 @@ export default function solidifyPiece({
   checkAndRemoveRows();
 
   // reset position
-  states.setPiece({
-    ...states.getPiece(),
+  setPiece({
+    ...piece,
     position: {
       x: Math.floor(CANVAS_CONFIG.MAIN.BOARD_WIDTH / 2),
       y: 0,
@@ -35,15 +40,15 @@ export default function solidifyPiece({
   });
 
   // Get the next piece
-  states.setPiece(states.getNextPiece());
+  setPiece(nextPiece);
 
   // Generate a new next piece
-  states.setNextPiece(generateRandomPiece());
+  setNextPiece(generateRandomPiece());
 
   // Game over check for the new piece
   if (checkCollision()) {
-    states.setIsGameOver(true);
-    states.getBoard().forEach((row: any) => row.fill(0));
+    setIsGameOver(true);
+    board.forEach((row: any) => row.fill(0));
   }
 
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);

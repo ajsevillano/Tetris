@@ -2,22 +2,12 @@ import { states } from '../globalStates';
 import { SCORE_CONFIG } from '../const';
 
 export default function updateScore(linesRemoved: any) {
+  const { ONE_ROW, TWO_ROWS, THREE_ROWS, FOUR_ROWS } = SCORE_CONFIG;
+  const SCORES = [0, ONE_ROW, TWO_ROWS, THREE_ROWS, FOUR_ROWS];
   let score = states.getScore();
+  let setScore = states.setScore;
 
-  switch (linesRemoved) {
-    case 1:
-      states.setScore((score += SCORE_CONFIG.ONE_ROW));
-      break;
-    case 2:
-      states.setScore((score += SCORE_CONFIG.TWO_ROWS));
-      break;
-    case 3:
-      states.setScore((score += SCORE_CONFIG.THREE_ROWS));
-      break;
-    case 4:
-      states.setScore((score += SCORE_CONFIG.FOUR_ROWS));
-      break;
-    default:
-      break;
+  if (linesRemoved >= 1 && linesRemoved <= 4) {
+    setScore((score += SCORES[linesRemoved]));
   }
 }
