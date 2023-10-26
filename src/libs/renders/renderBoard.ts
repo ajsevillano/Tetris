@@ -12,11 +12,15 @@ export default function renderBoard({
   levelElement,
   scoreElement,
 }: RenderBoardProps) {
+  let score = states.getScore();
+  let level = states.getLevel();
+  let totalLinesRemoved = states.getTotalLinesRemoved();
+
   drawBoard(context, canvas);
   renderFallingPieces(context);
   renderSolidifiedPieces(context);
   // Update state
-  updateElementText(scoreElement, states.getScore());
-  updateElementText(levelElement, states.getLevel());
-  updateElementText(linesElement, states.getTotalLinesRemoved());
+  updateElementText(scoreElement, score);
+  updateElementText(levelElement, level);
+  updateElementText(linesElement, totalLinesRemoved);
 }
