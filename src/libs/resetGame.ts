@@ -10,11 +10,11 @@ export default function resetGame(gameLoop: any) {
 }
 
 function rebootVariables() {
-  states.updateScore(0);
-  states.updateLevel(0);
-  states.updateTotalLinesRemoved(0);
-  states.updateIsGameOver(false);
-  states.updateFallSpeed(SPEED_CONFIG.DEFAULT_FALL_SPEED);
+  states.setScore(0);
+  states.setLevel(0);
+  states.setTotalLinesRemoved(0);
+  states.setIsGameOver(false);
+  states.setFallSpeed(SPEED_CONFIG.DEFAULT_FALL_SPEED);
 
   // Set the initial position of the piece
 

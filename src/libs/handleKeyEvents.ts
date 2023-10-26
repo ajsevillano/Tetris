@@ -1,5 +1,5 @@
 import { EVENT_MOVEMENTS } from '../const';
-import { state, states } from '../globalStates';
+import { states } from '../globalStates';
 import checkCollision from './checkCollisions';
 import generateRandomPiece from './generateRandomPiece';
 
@@ -95,7 +95,7 @@ function handleUpMovement() {
 
 export function handlePause(event: KeyboardEvent) {
   if (event.key === PAUSE_LOWERCASE || event.key === PAUSE_UPPERCASE)
-    states.updateIsPaused(!states.getIsPaused());
+    states.setIsPaused(!states.getIsPaused());
 }
 
 export function handleEnterKey(event: KeyboardEvent, reStartGame: () => void) {

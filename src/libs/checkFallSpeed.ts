@@ -9,11 +9,11 @@ export default function shouldIncreaseFallSpeed() {
     states.getTotalLinesRemoved() >=
     (level + 1) * SCORE_CONFIG.LINES_NEXT_LEVEL
   ) {
-    states.updateLevel(level + 1);
+    states.setLevel(level + 1);
 
     // Cap fall speed at 20
     if (states.getFallSpeed() > 50) {
-      states.updateFallSpeed(
+      states.setFallSpeed(
         (fallSpeed -= SPEED_CONFIG.SPEED_INCREMENT_PER_LEVEL),
       );
     }

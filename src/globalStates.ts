@@ -26,30 +26,43 @@ export const states = (function () {
   let nextPiece = generateRandomPiece();
   let piece = generateRandomPiece();
 
-  const updateScore = (newScore: any) => {
+  const setScore = (newScore: any) => {
     score = newScore;
   };
 
-  const updateLevel = (newLevel: any) => {
+  const setLevel = (newLevel: any) => {
     level = newLevel;
   };
 
-  const updateTotalLinesRemoved = (newTotalLinesRemoved: any) => {
+  const setTotalLinesRemoved = (newTotalLinesRemoved: any) => {
     totalLinesRemoved = newTotalLinesRemoved;
   };
 
-  const updateFallSpeed = (newFallSpeed: any) => {
+  const setFallSpeed = (newFallSpeed: any) => {
     fallSpeed = newFallSpeed;
   };
 
-  const updateIsGameOver = (newIsGameOver: any) => {
+  const setIsGameOver = (newIsGameOver: any) => {
     isGameOver = newIsGameOver;
   };
 
-  const updateIsPaused = (newIsPaused: any) => {
+  const setIsPaused = (newIsPaused: any) => {
     isPaused = newIsPaused;
   };
 
+  const setBoard = (newBoard: any) => {
+    board = newBoard;
+  };
+
+  const setPiece = (newPiece: any) => {
+    piece = newPiece;
+  };
+
+  const setNextPiece = (newNextPiece: any) => {
+    nextPiece = newNextPiece;
+  };
+
+  // Getters
   const getScore = () => {
     return score;
   };
@@ -78,33 +91,16 @@ export const states = (function () {
     return board;
   };
 
-  const setBoard = (newBoard: any) => {
-    board = newBoard;
-  };
-
   const getNextPiece = () => {
     return nextPiece;
-  };
-
-  const setNextPiece = (newNextPiece: any) => {
-    nextPiece = newNextPiece;
   };
 
   const getPiece = () => {
     return piece;
   };
 
-  const setPiece = (newPiece: any) => {
-    piece = newPiece;
-  };
-
   return {
-    updateScore,
-    updateLevel,
-    updateTotalLinesRemoved,
-    updateFallSpeed,
-    updateIsGameOver,
-    updateIsPaused,
+    getPiece,
     getFallSpeed,
     getScore,
     getLevel,
@@ -112,10 +108,15 @@ export const states = (function () {
     getIsGameOver,
     getIsPaused,
     getBoard,
-    setBoard,
     getNextPiece,
+    setBoard,
     setNextPiece,
+    setScore,
+    setLevel,
+    setTotalLinesRemoved,
+    setFallSpeed,
+    setIsGameOver,
+    setIsPaused,
     setPiece,
-    getPiece,
   };
 })();

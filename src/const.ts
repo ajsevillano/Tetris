@@ -24,7 +24,7 @@ export const EVENT_MOVEMENTS = {
 };
 
 export const SCORE_CONFIG = {
-  LINES_NEXT_LEVEL: 1,
+  LINES_NEXT_LEVEL: 10,
   INITIAL_SCORE: 0,
   INITIAL_LEVEL: 0,
   // Original BPS scoring system

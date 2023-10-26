@@ -2,7 +2,7 @@ import checkAndRemoveRows from './removeRows';
 import { CANVAS_CONFIG } from '../const';
 import generateRandomPiece from './generateRandomPiece';
 import checkCollision from './checkCollisions';
-import { state, states } from '../globalStates';
+import { states } from '../globalStates';
 import { drawNextPieceOnCanvas } from './draws';
 
 export default function solidifyPiece({
@@ -35,7 +35,6 @@ export default function solidifyPiece({
   });
 
   // Get the next piece
-
   states.setPiece(states.getNextPiece());
 
   // Generate a new next piece
@@ -43,7 +42,7 @@ export default function solidifyPiece({
 
   // Game over check for the new piece
   if (checkCollision()) {
-    states.updateIsGameOver(true);
+    states.setIsGameOver(true);
     states.getBoard().forEach((row: any) => row.fill(0));
   }
 
