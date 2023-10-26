@@ -10,6 +10,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "jsdom": "^22.1.0",
     "standard": "^17.1.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
