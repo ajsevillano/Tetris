@@ -17,7 +17,6 @@ const {
 
 export function handleArrowKeys(
   event: KeyboardEvent,
-
   solidifyPiece: () => void,
 ) {
   switch (event.key) {

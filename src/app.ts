@@ -50,6 +50,7 @@ const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
 function gameLoop(time = 0) {
+  console.log(states.getFallSpeed());
   // Check if the fall speed should be increased
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);

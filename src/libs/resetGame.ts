@@ -14,6 +14,7 @@ function rebootVariables() {
   states.setLevel(0);
   states.setTotalLinesRemoved(0);
   states.setIsGameOver(false);
+  states.setIsPaused(false);
   states.setFallSpeed(SPEED_CONFIG.DEFAULT_FALL_SPEED);
 
   // Set the initial position of the piece
