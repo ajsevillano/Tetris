@@ -26,78 +26,28 @@ export const states = (function () {
   let nextPiece = generateRandomPiece();
   let piece = generateRandomPiece();
 
-  const setScore = (newScore: any) => {
-    score = newScore;
-  };
-
-  const setLevel = (newLevel: any) => {
-    level = newLevel;
-  };
-
-  const setTotalLinesRemoved = (newTotalLinesRemoved: any) => {
-    totalLinesRemoved = newTotalLinesRemoved;
-  };
-
-  const setFallSpeed = (newFallSpeed: any) => {
-    fallSpeed = newFallSpeed;
-  };
-
-  const setIsGameOver = (newIsGameOver: any) => {
-    isGameOver = newIsGameOver;
-  };
-
-  const setIsPaused = (newIsPaused: any) => {
-    isPaused = newIsPaused;
-  };
-
-  const setBoard = (newBoard: any) => {
-    board = newBoard;
-  };
-
-  const setPiece = (newPiece: any) => {
-    piece = newPiece;
-  };
-
-  const setNextPiece = (newNextPiece: any) => {
-    nextPiece = newNextPiece;
-  };
+  // Setters
+  const setScore = (newScore: any) => (score = newScore);
+  const setLevel = (newLevel: any) => (level = newLevel);
+  const setFallSpeed = (newFallSpeed: any) => (fallSpeed = newFallSpeed);
+  const setIsGameOver = (newIsGameOver: any) => (isGameOver = newIsGameOver);
+  const setIsPaused = (newIsPaused: any) => (isPaused = newIsPaused);
+  const setBoard = (newBoard: any) => (board = newBoard);
+  const setPiece = (newPiece: any) => (piece = newPiece);
+  const setNextPiece = (newNextPiece: any) => (nextPiece = newNextPiece);
+  const setTotalLinesRemoved = (newTotalLinesRemoved: any) =>
+    (totalLinesRemoved = newTotalLinesRemoved);
 
   // Getters
-  const getScore = () => {
-    return score;
-  };
-
-  const getLevel = () => {
-    return level;
-  };
-
-  const getTotalLinesRemoved = () => {
-    return totalLinesRemoved;
-  };
-
-  const getFallSpeed = () => {
-    return fallSpeed;
-  };
-
-  const getIsGameOver = () => {
-    return isGameOver;
-  };
-
-  const getIsPaused = () => {
-    return isPaused;
-  };
-
-  const getBoard = () => {
-    return board;
-  };
-
-  const getNextPiece = () => {
-    return nextPiece;
-  };
-
-  const getPiece = () => {
-    return piece;
-  };
+  const getScore = () => score;
+  const getLevel = () => level;
+  const getTotalLinesRemoved = () => totalLinesRemoved;
+  const getFallSpeed = () => fallSpeed;
+  const getIsGameOver = () => isGameOver;
+  const getIsPaused = () => isPaused;
+  const getBoard = () => board;
+  const getNextPiece = () => nextPiece;
+  const getPiece = () => piece;
 
   return {
     getPiece,
