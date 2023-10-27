@@ -13,41 +13,44 @@ export const states = (function () {
   const { INITIAL_LEVEL, INITIAL_SCORE } = SCORE_CONFIG;
   const { DEFAULT_FALL_SPEED } = SPEED_CONFIG;
 
-  let score = INITIAL_SCORE;
-  let level = INITIAL_LEVEL;
-  let totalLinesRemoved = 0;
-  let fallSpeed = DEFAULT_FALL_SPEED;
-  let isGameOver = false;
-  let isPaused = false;
-  let board = createBoardMatrix(
-    CANVAS_CONFIG.MAIN.BOARD_WIDTH,
-    CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
-  );
-  let nextPiece = generateRandomPiece();
-  let piece = generateRandomPiece();
-
-  // Setters
-  const setScore = (newScore: any) => (score = newScore);
-  const setLevel = (newLevel: any) => (level = newLevel);
-  const setFallSpeed = (newFallSpeed: any) => (fallSpeed = newFallSpeed);
-  const setIsGameOver = (newIsGameOver: any) => (isGameOver = newIsGameOver);
-  const setIsPaused = (newIsPaused: any) => (isPaused = newIsPaused);
-  const setBoard = (newBoard: any) => (board = newBoard);
-  const setPiece = (newPiece: any) => (piece = newPiece);
-  const setNextPiece = (newNextPiece: any) => (nextPiece = newNextPiece);
-  const setTotalLinesRemoved = (newTotalLinesRemoved: any) =>
-    (totalLinesRemoved = newTotalLinesRemoved);
+  let state = {
+    score: INITIAL_SCORE,
+    level: INITIAL_LEVEL,
+    totalLinesRemoved: 0,
+    fallSpeed: DEFAULT_FALL_SPEED,
+    isGameOver: false,
+    isPaused: false,
+    board: createBoardMatrix(
+      CANVAS_CONFIG.MAIN.BOARD_WIDTH,
+      CANVAS_CONFIG.MAIN.BOARD_HEIGHT,
+    ),
+    nextPiece: generateRandomPiece(),
+    piece: generateRandomPiece(),
+  };
 
   // Getters
-  const getScore = () => score;
-  const getLevel = () => level;
-  const getTotalLinesRemoved = () => totalLinesRemoved;
-  const getFallSpeed = () => fallSpeed;
-  const getIsGameOver = () => isGameOver;
-  const getIsPaused = () => isPaused;
-  const getBoard = () => board;
-  const getNextPiece = () => nextPiece;
-  const getPiece = () => piece;
+  const getScore = () => state.score;
+  const getLevel = () => state.level;
+  const getTotalLinesRemoved = () => state.totalLinesRemoved;
+  const getFallSpeed = () => state.fallSpeed;
+  const getIsGameOver = () => state.isGameOver;
+  const getIsPaused = () => state.isPaused;
+  const getBoard = () => state.board;
+  const getNextPiece = () => state.nextPiece;
+  const getPiece = () => state.piece;
+
+  // Setters
+  const setScore = (newScore: any) => (state.score = newScore);
+  const setLevel = (newLevel: any) => (state.level = newLevel);
+  const setFallSpeed = (newFallSpeed: any) => (state.fallSpeed = newFallSpeed);
+  const setIsGameOver = (newIsGameOver: any) =>
+    (state.isGameOver = newIsGameOver);
+  const setIsPaused = (newIsPaused: any) => (state.isPaused = newIsPaused);
+  const setBoard = (newBoard: any) => (state.board = newBoard);
+  const setPiece = (newPiece: any) => (state.piece = newPiece);
+  const setNextPiece = (newNextPiece: any) => (state.nextPiece = newNextPiece);
+  const setTotalLinesRemoved = (newTotalLinesRemoved: any) =>
+    (state.totalLinesRemoved = newTotalLinesRemoved);
 
   return {
     getPiece,
