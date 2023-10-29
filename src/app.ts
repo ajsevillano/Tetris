@@ -15,6 +15,7 @@ import {
   handleEnterKey,
   handleRkey,
   handleArrowKeys,
+  handleSpace,
 } from './libs/handleKeyEvents';
 import {
   drawPauseScreen,
@@ -108,6 +109,12 @@ function addEventListeners() {
   document.addEventListener('keydown', (event) =>
     handleRkey(event, () => resetGame(gameLoop)),
   );
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === ' ') {
+      handleSpace(() => solidifyPiece({ nextPieceCanvas, nextPieceContext }));
+    }
+  });
 }
 
 // Execute the game for the first time

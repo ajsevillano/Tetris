@@ -71,6 +71,20 @@ function handleRightMovement() {
   }
 }
 
+export function handleSpace(solidifyPiece: () => void) {
+  let piece = states.getPiece();
+  if (states.getIsGameOver()) return;
+  while (!checkCollision()) {
+    piece.position.y++;
+    states.setPiece(piece);
+  }
+
+  piece.position.y--;
+
+  states.setPiece(piece);
+  solidifyPiece();
+}
+
 function handleUpMovement() {
   const updatedPiece = states.getPiece();
   const rotated = [];
