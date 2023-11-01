@@ -9,7 +9,7 @@ export const state = {
   lastTime: 0,
 };
 
-export const states = (function () {
+export const states: any = (function () {
   const { INITIAL_LEVEL, INITIAL_SCORE } = SCORE_CONFIG;
   const { DEFAULT_FALL_SPEED } = SPEED_CONFIG;
 
@@ -26,6 +26,7 @@ export const states = (function () {
     ),
     nextPiece: generateRandomPiece(),
     piece: generateRandomPiece(),
+    controllerIndex: null,
   };
 
   // Getters
@@ -38,6 +39,7 @@ export const states = (function () {
   const getBoard = () => state.board;
   const getNextPiece = () => state.nextPiece;
   const getPiece = () => state.piece;
+  const getControllerIndex = () => state.controllerIndex;
 
   // Setters
   const setScore = (newScore: any) => (state.score = newScore);
@@ -51,6 +53,8 @@ export const states = (function () {
   const setNextPiece = (newNextPiece: any) => (state.nextPiece = newNextPiece);
   const setTotalLinesRemoved = (newTotalLinesRemoved: any) =>
     (state.totalLinesRemoved = newTotalLinesRemoved);
+  const setControllerIndex = (newControllerIndex: any) =>
+    (state.controllerIndex = newControllerIndex);
 
   return {
     getPiece,
@@ -62,6 +66,7 @@ export const states = (function () {
     getIsPaused,
     getBoard,
     getNextPiece,
+    getControllerIndex,
     setBoard,
     setNextPiece,
     setScore,
@@ -71,5 +76,6 @@ export const states = (function () {
     setIsGameOver,
     setIsPaused,
     setPiece,
+    setControllerIndex,
   };
 })();
