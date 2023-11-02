@@ -15,13 +15,14 @@ import {
   handleEnterKey,
   handleRkey,
   handleArrowKeys,
-  handleSpace,
-} from './libs/handleKeyEvents';
+} from './libs/handlers/handleKeyBoardEvents';
+import { handleHardPush } from './libs/handlers/handlePlayerActions';
 import {
   drawPauseScreen,
   drawGameOverScreen,
   drawNextPieceOnCanvas,
 } from './libs/draws';
+import { handleGamePad } from './libs/handlers/handleGamePadEvents';
 
 // Main Canvas
 const canvas = document.querySelector('canvas') as HTMLCanvasElement | null;
@@ -50,9 +51,10 @@ const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
+// GamePad handler
+let gamePadLoopActive = false;
+
 function gameLoop(time = 0) {
-  console.log(states.getFallSpeed());
-  // Check if the fall speed should be increased
   shouldIncreaseFallSpeed();
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
@@ -87,6 +89,14 @@ function gameLoop(time = 0) {
   window.requestAnimationFrame(gameLoop);
 }
 
+function GamePadLoop() {
+  // TODO: Pause doesn't affect this loop
+  if (gamePadLoopActive) {
+    handleGamePad({ nextPieceCanvas, nextPieceContext, gameLoop });
+    window.requestAnimationFrame(GamePadLoop);
+  }
+}
+
 // EVENT LISTENERS
 function addEventListeners() {
   // Arrow key event listeners
@@ -112,8 +122,36 @@ function addEventListeners() {
 
   document.addEventListener('keydown', (event) => {
     if (event.key === ' ') {
-      handleSpace(() => solidifyPiece({ nextPieceCanvas, nextPieceContext }));
+      handleHardPush(() =>
+        solidifyPiece({ nextPieceCanvas, nextPieceContext }),
+      );
     }
+  });
+
+  window.addEventListener('gamepadconnected', (e) => {
+    // GamePadLoop only is called when a gamepad is connected
+    gamePadLoopActive = true;
+    GamePadLoop();
+
+    states.setControllerIndex(e.gamepad.index);
+    console.log(
+      'Gamepad connected at index %d: %s. %d buttons, %d axes.',
+      e.gamepad.index,
+      e.gamepad.id,
+      e.gamepad.buttons.length,
+      e.gamepad.axes.length,
+    );
+    console.log(e.gamepad);
+  });
+
+  window.addEventListener('gamepaddisconnected', (e) => {
+    gamePadLoopActive = false;
+    console.log(
+      'Gamepad disconnected from index %d: %s',
+      e.gamepad.index,
+      e.gamepad.id,
+    );
+    states.setControllerIndex(null);
   });
 }
 
