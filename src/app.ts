@@ -51,9 +51,11 @@ const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
 
+// GamePad handler
+let gamePadLoopActive = false;
+
 function gameLoop(time = 0) {
   shouldIncreaseFallSpeed();
-  handleGamePad({ nextPieceCanvas, nextPieceContext });
   drawNextPieceOnCanvas(nextPieceCanvas, nextPieceContext);
 
   if (states.getIsGameOver()) {
@@ -85,6 +87,14 @@ function gameLoop(time = 0) {
   });
 
   window.requestAnimationFrame(gameLoop);
+}
+
+function GamePadLoop() {
+  // TODO: Pause doesn't affect this loop
+  if (gamePadLoopActive) {
+    handleGamePad({ nextPieceCanvas, nextPieceContext, gameLoop });
+    window.requestAnimationFrame(GamePadLoop);
+  }
 }
 
 // EVENT LISTENERS
@@ -119,6 +129,10 @@ function addEventListeners() {
   });
 
   window.addEventListener('gamepadconnected', (e) => {
+    // GamePadLoop only is called when a gamepad is connected
+    gamePadLoopActive = true;
+    GamePadLoop();
+
     states.setControllerIndex(e.gamepad.index);
     console.log(
       'Gamepad connected at index %d: %s. %d buttons, %d axes.',
@@ -131,6 +145,7 @@ function addEventListeners() {
   });
 
   window.addEventListener('gamepaddisconnected', (e) => {
+    gamePadLoopActive = false;
     console.log(
       'Gamepad disconnected from index %d: %s',
       e.gamepad.index,
@@ -141,6 +156,5 @@ function addEventListeners() {
 }
 
 // Execute the game for the first time
-
 addEventListeners();
 gameLoop();

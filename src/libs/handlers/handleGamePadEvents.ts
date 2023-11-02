@@ -1,5 +1,6 @@
 import { states } from '../../globalStates';
 import solidifyPiece from '../solidifyPiece';
+import resetGame from '../resetGame';
 import {
   handleDownMovement,
   handleLeftMovement,
@@ -15,7 +16,11 @@ const hardPushInterval = 200;
 let greenPressed = false;
 let bluePressed = false;
 
-export function handleGamePad({ nextPieceCanvas, nextPieceContext }: any) {
+export function handleGamePad({
+  nextPieceCanvas,
+  nextPieceContext,
+  gameLoop,
+}: any) {
   const gamePad = loadControler();
 
   if (gamePad) {
@@ -26,6 +31,7 @@ export function handleGamePad({ nextPieceCanvas, nextPieceContext }: any) {
       greenButton,
       blueButton,
       pauseButton,
+      resetButton,
     } = gamePad;
 
     // Right arrow
@@ -44,6 +50,9 @@ export function handleGamePad({ nextPieceCanvas, nextPieceContext }: any) {
 
     // Pause button
     handleGamePadPause(pauseButton);
+
+    // Reset button
+    handleGamePadReset(resetButton, gameLoop);
   }
 }
 
@@ -61,6 +70,7 @@ function loadControler() {
       const greenButton = gamepad.buttons[0].pressed;
       const blueButton = gamepad.buttons[2].pressed;
       const pauseButton = gamepad.buttons[9].pressed;
+      const resetButton = gamepad.buttons[8].pressed;
 
       return {
         DownArrow,
@@ -69,6 +79,7 @@ function loadControler() {
         greenButton,
         blueButton,
         pauseButton,
+        resetButton,
       };
     }
   }
@@ -126,6 +137,14 @@ function handleGamePadPushBlueButton(
 function handleGamePadPause(pauseButton: any) {
   if (pauseButton && Date.now() - lastMoveTime > hardPushInterval) {
     states.setIsPaused(!states.getIsPaused());
+
+    lastMoveTime = Date.now();
+  }
+}
+
+function handleGamePadReset(resetButton: any, gameLoop: any) {
+  if (resetButton && Date.now() - lastMoveTime > hardPushInterval) {
+    resetGame(gameLoop);
     lastMoveTime = Date.now();
   }
 }
