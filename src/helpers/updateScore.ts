@@ -7,7 +7,20 @@ export default function updateScore(linesRemoved: any) {
   let score = states.getScore();
   let setScore = states.setScore;
 
+  // Update score
   if (linesRemoved >= 1 && linesRemoved <= 4) {
     setScore((score += SCORES[linesRemoved]));
+  }
+  // Update high score
+  updateHighScore(score);
+}
+
+function updateHighScore(score: number) {
+  const hiScoreElement: HTMLElement | null =
+    document.querySelector('.hi-score-box-text');
+  const highScore = localStorage.getItem('hi-score');
+  if (highScore === null || score > parseInt(highScore)) {
+    localStorage.setItem('hi-score', score.toString());
+    hiScoreElement!.innerText = score.toString();
   }
 }
