@@ -50,6 +50,8 @@ const linesElement: HTMLElement | null = document.querySelector('#lines');
 const levelElement: HTMLElement | null = document.querySelector('.level');
 const scoreElement: HTMLElement | null =
   document.querySelector('.score-box-text');
+const hiScoreElement: HTMLElement | null =
+  document.querySelector('.hi-score-box-text');
 
 // GamePad handler
 let gamePadLoopActive = false;
@@ -155,6 +157,17 @@ function addEventListeners() {
   });
 }
 
+function checkLocalStorageHighScore() {
+  const highScore = localStorage.getItem('hi-score');
+  if (highScore && hiScoreElement) {
+    hiScoreElement.innerText = highScore;
+  } else {
+    localStorage.setItem('hi-score', '0');
+    if (hiScoreElement) hiScoreElement.innerText = '0';
+  }
+}
+
 // Execute the game for the first time
 addEventListeners();
+checkLocalStorageHighScore();
 gameLoop();
