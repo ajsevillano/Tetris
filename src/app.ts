@@ -157,7 +157,7 @@ function addEventListeners() {
   });
 }
 
-function checkLocalStorageHighScore() {
+function setInitialHighScore() {
   const highScore = localStorage.getItem('hi-score');
   if (highScore && hiScoreElement) {
     hiScoreElement.innerText = highScore;
@@ -169,5 +169,5 @@ function checkLocalStorageHighScore() {
 
 // Execute the game for the first time
 addEventListeners();
-checkLocalStorageHighScore();
+setInitialHighScore();
 gameLoop();
