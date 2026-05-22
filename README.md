@@ -1,50 +1,69 @@
-# Tetris
+<div align="center">
+  <img src="logo.png" alt="Tetris" width="480"/>
 
-> The classic Tetris game built with TypeScript and rendered on an HTML Canvas. Started as a challenge and grew into a full-featured implementation with levels, scoring, and gamepad support.
+  [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+  [![Vitest](https://img.shields.io/badge/Tested_with_Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)](https://vitest.dev/)
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=flat&logo=vitest&logoColor=white)
+  **🧩 All 7 tetrominoes, authentic BPS scoring, and gamepad support — rebuilt from scratch in TypeScript 🎮**
 
-## Features
+</div>
 
-- Classic Tetris gameplay on a 14x30 HTML Canvas board
-- Next piece preview panel
-- Levels and progressive speed increase (50ms faster per level)
-- Scoring based on the original BPS system (40 / 100 / 300 / 1200 points)
-- Keyboard and gamepad support
-- Pause and restart at any time
-- Unit tests with Vitest
+---
 
-## Controls
+## 🎯 What makes this different
+
+Most canvas Tetris clones stop at the basics. This one goes further:
+
+| Feature | Details |
+|---|---|
+| 🎨 All 7 tetrominoes | I, J, L, O, S, T, Z in their classic colors |
+| 📈 Authentic scoring | Original BPS system — 40 / 100 / 300 / 1,200 pts |
+| 🏆 High score | Persisted locally with `localStorage` |
+| ⏩ Progressive speed | 50ms faster per level, 10 lines = level up |
+| 🎮 Gamepad support | Full controller input alongside keyboard |
+| 🧪 Unit tested | Vitest with canvas mock for all core logic |
+
+## 🚀 Quick Start
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173` and start playing.
+
+## 🕹️ Controls
 
 | Key | Action |
 |---|---|
-| Arrow Left / Right | Move piece horizontally |
-| Arrow Down | Soft drop |
-| Arrow Up | Rotate piece |
-| P | Pause / Resume |
-| R | Restart |
+| `←` `→` | Move piece left / right |
+| `↓` | Soft drop |
+| `↑` | Rotate piece |
+| `P` | Pause / Resume |
+| `R` | Restart |
 
-## Getting Started
+Gamepad is also fully supported — connect a controller and play immediately.
+
+## 🧪 Tests
 
 ```bash
-# Install dependencies
-npm install
-
-# Run in development mode
-npm run dev
-
-# Run tests
 npm test
-
-# Build for production
-npm run build
 ```
 
-## Tech Stack
+Core logic is covered — collision detection, board creation, piece generation, fall speed, and row removal.
 
-- TypeScript
-- HTML Canvas API
-- Vite
-- Vitest + vitest-canvas-mock
+## 🏗️ Build
+
+```bash
+npm run build    # Outputs to /dist
+npm run preview  # Preview the production build locally
+```
+
+## 🛠️ Tech Stack
+
+- **TypeScript** — typed game logic
+- **HTML Canvas API** — dual-canvas rendering (board + next piece)
+- **Vite** — dev server and bundler
+- **Vitest** + `vitest-canvas-mock` — unit testing with canvas support
